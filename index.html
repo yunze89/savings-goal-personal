@@ -12,13 +12,19 @@
 .panel{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:20px;margin-top:18px}
 .panel h2{font-size:18px;margin:0 0 14px}.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 button{border:0;border-radius:9px;padding:10px 14px;background:#111827;color:white;cursor:pointer;font-weight:600}button.secondary{background:#eef0f3;color:#202124}
+button:disabled{background:#e5e7eb;color:#9ca3af;cursor:not-allowed}
 .table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;min-width:850px}.table th,.table td{padding:11px 10px;border-bottom:1px solid #eee;text-align:right;font-size:13px}.table th{color:#6b7280;font-weight:600;background:#fafafa}.table th:first-child,.table td:first-child{text-align:left}.table input{width:125px;padding:8px;border:1px solid #d1d5db;border-radius:7px;text-align:right}.plus{color:#15803d;font-weight:700}.minus{color:#dc2626;font-weight:700}.hit{color:#15803d;font-weight:700}.muted{color:#9ca3af}
 .notice{background:#f9fafb;border:1px dashed #d1d5db;padding:12px 14px;border-radius:10px;font-size:13px;color:#4b5563;margin-bottom:15px}
 @media(max-width:800px){.cards{grid-template-columns:repeat(2,1fr)}.container{padding:20px 12px}.value{font-size:21px}}
 @media(max-width:500px){.cards{grid-template-columns:1fr}}
 
-.asset-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.asset-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #eee}.asset-row:last-child{border-bottom:0}.asset-row input{width:140px;padding:8px;border:1px solid #d1d5db;border-radius:7px;text-align:right}.asset-total{font-size:24px;font-weight:700;margin-top:14px}.green{color:#15803d}.red{color:#dc2626}
+.asset-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:15px}.asset-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #eee}.asset-row:last-child{border-bottom:0}.asset-row input{width:140px;padding:8px;border:1px solid #d1d5db;border-radius:7px;text-align:right}.asset-total{font-size:24px;font-weight:700}.green{color:#15803d}.red{color:#dc2626}
 @media(max-width:800px){.asset-grid{grid-template-columns:1fr 1fr}}@media(max-width:500px){.asset-grid{grid-template-columns:1fr}}
+
+.firebase-bar{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-top:18px;padding:14px;background:#fff;border:1px solid #e5e7eb;border-radius:14px}.firebase-status{font-size:13px;color:#6b7280}.firebase-status.synced{color:#15803d}.firebase-status.syncing{color:#b45309}.firebase-status.error{color:#dc2626}.firebase-help{font-size:12px;color:#6b7280;margin-top:5px}
+
+.panel-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.panel-header h2{margin:0}
 </style>
 </head>
 <body>
@@ -28,12 +34,17 @@ button{border:0;border-radius:9px;padding:10px 14px;background:#111827;color:whi
     <p>월 300만원 + 매년 2월 1,500만원 추가 저축을 기준으로 실제 저축액을 기록합니다.</p>
   </div>
 
-
   <div class="panel">
-    <h2>현재 자산</h2>
-    <div class="notice">현재 자산은 수정할 수 있습니다. 금액을 변경하면 총자산과 목표까지 남은 금액이 자동으로 다시 계산됩니다.</div>
-    <div class="asset-grid" id="assets"></div>
+    <div class="panel-header">
+      <h2>현재 자산</h2>
+      <button id="toggleAssetBtn" class="secondary" onclick="toggleAssetPanel()" disabled>자산 관리 (로그인 필요)</button>
+    </div>
     <div class="asset-total">현재 총자산 <span id="assetTotal">0원</span></div>
+    
+    <div id="assetContainer" style="display:none; margin-top: 15px;">
+      <div class="notice">현재 자산은 로그인 후 수정할 수 있습니다. 금액을 변경하면 총자산과 목표까지 남은 금액이 자동으로 다시 계산됩니다.</div>
+      <div class="asset-grid" id="assets"></div>
+    </div>
   </div>
 
   <div class="cards">
@@ -44,12 +55,23 @@ button{border:0;border-radius:9px;padding:10px 14px;background:#111827;color:whi
     <div class="card"><div class="label">예상 목표 달성</div><div class="value" id="expected">계산 중</div><div class="sub">실제 저축 실적 반영</div></div>
   </div>
 
+  <div class="firebase-bar">
+    <div>
+      <div id="firebaseStatus" class="firebase-status">Firebase 연결 준비 중...</div>
+      <div class="firebase-help">Google 로그인 후 저축 기록과 현재 자산이 Firebase에 저장되어 다른 PC에서도 자동 동기화됩니다.</div>
+    </div>
+    <div class="controls">
+      <button id="loginBtn" onclick="loginWithGoogle()">Google 로그인</button>
+      <button id="logoutBtn" class="secondary" onclick="logoutFirebase()" style="display:none">로그아웃</button>
+    </div>
+  </div>
+
   <div class="panel">
     <h2>이번 달 요약</h2>
     <div class="notice" id="summary">월별 실제 저축액을 입력하면 목표 대비 초과/미달과 누적 저축액이 자동 계산됩니다.</div>
     <div class="controls">
-      <button onclick="addCurrentMonth()">이번 달 추가</button>
-      <button class="secondary" onclick="resetData()">전체 초기화</button>
+      <button id="addMonthBtn" onclick="addCurrentMonth()" disabled>이번 달 추가</button>
+      <button id="resetBtn" class="secondary" onclick="resetData()" disabled>전체 초기화</button>
       <button class="secondary" onclick="exportCSV()">CSV 내보내기</button>
     </div>
   </div>
@@ -68,114 +90,132 @@ button{border:0;border-radius:9px;padding:10px 14px;background:#111827;color:whi
   </div>
 </div>
 
-<script>
-const TARGET=130000000, MONTHLY=3000000, FEB_EXTRA=15000000;
-const START=new Date(2026,7,1); // 2026-08
-const KEY="savingChallenge130m";
-const ASSET_KEY="savingChallengeAssets";
-const DEFAULT_ASSETS={
-  "주식":60000000,
-  "청약통장":17500000,
-  "현금":12000000,
-  "비트코인":15000000,
-  "기존 상환한 부채 효과":8000000,
-  "아파트 매도 후 순수금액":450000000
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+// Firebase Console > 프로젝트 설정 > 내 앱(Web)에서 이 값을 실제 값으로 교체하세요.
+const firebaseConfig={
+  apiKey:"YOUR_API_KEY",
+  authDomain:"YOUR_PROJECT.firebaseapp.com",
+  projectId:"YOUR_PROJECT_ID",
+  storageBucket:"YOUR_PROJECT.firebasestorage.app",
+  messagingSenderId:"YOUR_MESSAGING_SENDER_ID",
+  appId:"YOUR_APP_ID"
 };
-let data=JSON.parse(localStorage.getItem(KEY)||"{}");
-let assets=JSON.parse(localStorage.getItem(ASSET_KEY)||JSON.stringify(DEFAULT_ASSETS));
+
+const TARGET=130000000, MONTHLY=3000000, FEB_EXTRA=15000000;
+const START=new Date(2026,7,1);
+const KEY="savingChallenge130m", ASSET_KEY="savingChallengeAssets";
+const DEFAULT_ASSETS={"주식":60000000,"청약통장":17500000,"현금":12000000,"비트코인":15000000,"기존 상환한 부채 효과":8000000,"아파트 매도 후 순수금액":450000000};
+let data=JSON.parse(localStorage.getItem(KEY)||"{}"), assets=JSON.parse(localStorage.getItem(ASSET_KEY)||JSON.stringify(DEFAULT_ASSETS));
+let auth=null,db=null,user=null,unsubscribe=null,cloudReady=false,saveTimer=null;
 
 function won(n){return Math.round(n).toLocaleString("ko-KR")+"원"}
 function monthKey(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")}
 function monthLabel(k){let [y,m]=k.split("-");return `${y}년 ${Number(m)}월`}
-function months(){
-  const a=[]; let d=new Date(START);
-  for(let i=0;i<48;i++){a.push(new Date(d));d.setMonth(d.getMonth()+1)}
-  return a;
-}
+function months(){const a=[];let d=new Date(START);for(let i=0;i<48;i++){a.push(new Date(d));d.setMonth(d.getMonth()+1)}return a}
 function planned(k){return MONTHLY+(k.endsWith("-02")?FEB_EXTRA:0)}
-function save(){localStorage.setItem(KEY,JSON.stringify(data))}
+function status(msg,cls=""){const e=document.getElementById("firebaseStatus");e.className="firebase-status "+cls;e.textContent=msg}
+function localSave(){localStorage.setItem(KEY,JSON.stringify(data));localStorage.setItem(ASSET_KEY,JSON.stringify(assets))}
+async function cloudSave(){if(!user||!cloudReady)return;clearTimeout(saveTimer);saveTimer=setTimeout(async()=>{try{status("Firebase 저장 중...","syncing");await setDoc(doc(db,"users",user.uid,"savingChallenge","main"),{data,assets,updatedAt:serverTimestamp()},{merge:true});status(`동기화됨 · ${user.email||"Google 계정"}`,"synced")}catch(e){console.error(e);status("Firebase 저장 실패 · 로컬에는 저장됨","error")}},250)}
+function save(){localSave();cloudSave()}
+
+async function loadCloud(){
+  const ref=doc(db,"users",user.uid,"savingChallenge","main");
+  const snap=await getDoc(ref);
+  if(snap.exists()){const v=snap.data();if(v.data)data=v.data;if(v.assets)assets=v.assets;localSave();render()}
+  else await setDoc(ref,{data,assets,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});
+  cloudReady=true;status(`실시간 동기화됨 · ${user.email||"Google 계정"}`,"synced");
+  if(unsubscribe)unsubscribe();
+  unsubscribe=onSnapshot(ref,s=>{if(!s.exists())return;const v=s.data();if(v.data&&JSON.stringify(v.data)!==JSON.stringify(data)){data=v.data;localSave();render()}if(v.assets&&JSON.stringify(v.assets)!==JSON.stringify(assets)){assets=v.assets;localSave();render()}},e=>{console.error(e);status("실시간 동기화 오류","error")});
+}
+async function loginWithGoogle(){try{await signInWithPopup(auth,new GoogleAuthProvider())}catch(e){console.error(e);status("Google 로그인 실패","error");alert("Google 로그인을 사용할 수 없습니다. Firebase Authentication에서 Google 제공업체를 활성화하세요.")}}
+async function logoutFirebase(){if(unsubscribe)unsubscribe();unsubscribe=null;cloudReady=false;await signOut(auth)}
+window.loginWithGoogle=loginWithGoogle;window.logoutFirebase=logoutFirebase;
+
+// 자산 영역 토글 기능
+function toggleAssetPanel(){
+  const container = document.getElementById("assetContainer");
+  const btn = document.getElementById("toggleAssetBtn");
+  if(container.style.display === "none"){
+    container.style.display = "block";
+    btn.textContent = "자산 접기";
+  }else{
+    container.style.display = "none";
+    btn.textContent = "자산 관리";
+  }
+}
+window.toggleAssetPanel = toggleAssetPanel;
+
 function renderAssets(){
-  let total=0, out="";
+  let total=0,out="";
+  const isReadOnly = !user ? "readonly" : "";
   for(const [name,value] of Object.entries(assets)){
     total+=Number(value)||0;
-    out+=`<div class="asset-row"><span>${name}</span><input type="number" min="0" step="10000" value="${Number(value)||0}" onchange="updateAsset('${name}',this.value)"></div>`;
+    out+=`<div class="asset-row"><span>${name}</span><input type="number" min="0" step="10000" value="${Number(value)||0}" ${isReadOnly} onchange="updateAsset('${name}',this.value)"></div>`
   }
   document.getElementById("assets").innerHTML=out;
   document.getElementById("assetTotal").textContent=won(total);
   document.getElementById("totalAssetCard").textContent=won(total);
-  return total;
+  return total
 }
 
 function render(){
-  let cumulative=0, hit=null, rows="";
+  let cumulative=0,hit=null,rows="";
+  const isReadOnly = !user ? "readonly" : "";
+  
   for(const d of months()){
-    const k=monthKey(d), actual=Number(data[k]||0), target=planned(k), diff=actual-target;
+    const k=monthKey(d),actual=Number(data[k]||0),target=planned(k),diff=actual-target;
     cumulative+=actual;
-    const remain=Math.max(0,TARGET-cumulative), rate=Math.min(100,cumulative/TARGET*100);
-    if(!hit && cumulative>=TARGET) hit=k;
-    rows+=`<tr>
-      <td>${monthLabel(k)}</td>
-      <td>${won(MONTHLY)}</td>
-      <td>${d.getMonth()===1?won(FEB_EXTRA):"-"}</td>
-      <td><b>${won(target)}</b></td>
-      <td><input type="number" min="0" step="10000" value="${actual||""}" placeholder="직접 입력"
-          onchange="update('${k}',this.value)"></td>
-      <td class="${diff>=0?'plus':'minus'}">${actual?((diff>=0?"+":"")+won(diff)):"-"}</td>
-      <td><b>${won(cumulative)}</b></td>
-      <td>${remain?won(remain):'<span class="hit">목표 달성</span>'}</td>
-      <td>${actual ? (Math.min(100, cumulative/TARGET*100).toFixed(1)+"%") : "-"}</td>
-    </tr>`;
+    const remain=Math.max(0,TARGET-cumulative);
+    if(!hit&&cumulative>=TARGET)hit=k;
+    rows+=`<tr><td>${monthLabel(k)}</td><td>${won(MONTHLY)}</td><td>${d.getMonth()===1?won(FEB_EXTRA):"-"}</td><td><b>${won(target)}</b></td><td><input type="number" min="0" step="10000" value="${actual||""}" placeholder="${user?'직접 입력':'로그인 필요'}" ${isReadOnly} onchange="update('${k}',this.value)"></td><td class="${diff>=0?'plus':'minus'}">${actual?((diff>=0?"+":"")+won(diff)):"-"}</td><td><b>${won(cumulative)}</b></td><td>${remain?won(remain):'<span class="hit">목표 달성</span>'}</td><td>${actual?(Math.min(100,cumulative/TARGET*100).toFixed(1)+"%"):"-"}</td></tr>`
   }
+  
   document.getElementById("rows").innerHTML=rows;
   document.getElementById("saved").textContent=won(cumulative);
   document.getElementById("remain").textContent=won(Math.max(0,TARGET-cumulative));
   document.getElementById("rate").textContent=Math.min(100,cumulative/TARGET*100).toFixed(1)+"%";
   document.getElementById("bar").style.width=Math.min(100,cumulative/TARGET*100)+"%";
   document.getElementById("expected").textContent=hit?monthLabel(hit):estimate(cumulative);
+  
+  const now=monthKey(new Date()),actual=Number(data[now]||0),target=planned(now),diff=actual-target;
+  document.getElementById("summary").innerHTML=actual?`<b>${monthLabel(now)}</b> 실제 저축 ${won(actual)} / 목표 ${won(target)} · 목표 대비 <span class="${diff>=0?'plus':'minus'}">${diff>=0?"+":""}${won(diff)}</span>`:`<b>${monthLabel(now)}</b> 실제 저축액을 입력해주세요. 이번 달 목표는 <b>${won(target)}</b>입니다.`;
+  
+  const base=renderAssets();
+  document.getElementById("totalAssetCard").textContent=won(base+cumulative);
 
-  const now=monthKey(new Date());
-  const actual=Number(data[now]||0), target=planned(now), diff=actual-target;
-  document.getElementById("summary").innerHTML=actual
-    ? `<b>${monthLabel(now)}</b> 실제 저축 ${won(actual)} / 목표 ${won(target)} · 목표 대비 <span class="${diff>=0?'plus':'minus'}">${diff>=0?"+":""}${won(diff)}</span>`
-    : `<b>${monthLabel(now)}</b> 실제 저축액을 입력해주세요. 이번 달 목표는 <b>${won(target)}</b>입니다.`;
+  // 로그인 유무에 따른 버튼 UI 업데이트
+  const toggleBtn = document.getElementById("toggleAssetBtn");
+  const addBtn = document.getElementById("addMonthBtn");
+  const resetBtn = document.getElementById("resetBtn");
+  const assetContainer = document.getElementById("assetContainer");
 
-  const baseAssets=renderAssets();
-  document.getElementById("totalAssetCard").textContent=won(baseAssets+cumulative);
-}
-function estimate(cumulative){
-  let total=cumulative, d=new Date();
-  d.setDate(1); d.setMonth(d.getMonth()+1);
-  for(let i=0;i<120;i++){
-    total+=planned(monthKey(d));
-    if(total>=TARGET)return monthLabel(monthKey(d));
-    d.setMonth(d.getMonth()+1);
+  if(user){
+    toggleBtn.disabled = false;
+    toggleBtn.textContent = assetContainer.style.display === "none" ? "자산 관리" : "자산 접기";
+    addBtn.disabled = false;
+    resetBtn.disabled = false;
+  } else {
+    toggleBtn.disabled = true;
+    toggleBtn.textContent = "자산 관리 (로그인 필요)";
+    addBtn.disabled = true;
+    resetBtn.disabled = true;
+    assetContainer.style.display = "none";
   }
-  return "예상 불가";
 }
-function update(k,v){
-  data[k]=Number(v)||0; save(); render();
-}
-function updateAsset(name,v){
-  assets[name]=Number(v)||0;
-  localStorage.setItem(ASSET_KEY,JSON.stringify(assets));
-  renderAssets();
-}
-function update(k,v){data[k]=Number(v)||0;save();render()}
-function addCurrentMonth(){
-  const k=monthKey(new Date());
-  const el=document.querySelector(`input[onchange="update('${k}',this.value)"]`);
-  if(el){el.focus();el.scrollIntoView({behavior:"smooth",block:"center"})}
-}
-function resetData(){if(confirm("입력한 모든 저축 기록을 초기화할까요?")){data={};save();render()}}
-function exportCSV(){
-  let lines=["월,기본목표,2월추가,월목표,실제저축액,차이,누적저축,남은금액,달성률"], cumulative=0;
-  for(const d of months()){
-    const k=monthKey(d), actual=Number(data[k]||0), target=planned(k); cumulative+=actual;
-    lines.push([k,MONTHLY,d.getMonth()===1?FEB_EXTRA:0,target,actual,actual-target,cumulative,Math.max(0,TARGET-cumulative),(cumulative/TARGET*100).toFixed(1)+"%"].join(","));
-  }
-  const blob=new Blob(["\ufeff"+lines.join("\n")],{type:"text/csv;charset=utf-8"});
-  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="1억3천_저축기록.csv";a.click();
-}
+
+function estimate(cumulative){let total=cumulative,d=new Date();d.setDate(1);d.setMonth(d.getMonth()+1);for(let i=0;i<120;i++){total+=planned(monthKey(d));if(total>=TARGET)return monthLabel(monthKey(d));d.setMonth(d.getMonth()+1)}return "예상 불가"}
+function update(k,v){if(!user) return; data[k]=Number(v)||0;save();render()}
+function updateAsset(name,v){if(!user) return; assets[name]=Number(v)||0;save();renderAssets()}
+function addCurrentMonth(){if(!user) return; const k=monthKey(new Date()),el=document.querySelector(`input[onchange="update('${k}',this.value)"]`);if(el){el.focus();el.scrollIntoView({behavior:"smooth",block:"center"})}}
+function resetData(){if(!user) return; if(confirm("입력한 모든 저축 기록을 초기화할까요?")){data={};save();render()}}
+function exportCSV(){let lines=["월,기본목표,2월추가,월목표,실제저축액,차이,누적저축,남은금액,달성률"],cumulative=0;for(const d of months()){const k=monthKey(d),actual=Number(data[k]||0),target=planned(k);cumulative+=actual;lines.push([k,MONTHLY,d.getMonth()===1?FEB_EXTRA:0,target,actual,actual-target,cumulative,Math.max(0,TARGET-cumulative),(cumulative/TARGET*100).toFixed(1)+"%"].join(","))}const blob=new Blob(["\ufeff"+lines.join("\n")],{type:"text/csv;charset=utf-8"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="1억3천_저축기록.csv";a.click()}
+window.update=update;window.updateAsset=updateAsset;window.addCurrentMonth=addCurrentMonth;window.resetData=resetData;window.exportCSV=exportCSV;
+
+if(!firebaseConfig.apiKey.startsWith("YOUR_")){try{const app=initializeApp(firebaseConfig);auth=getAuth(app);db=getFirestore(app);onAuthStateChanged(auth,async u=>{user=u;document.getElementById("loginBtn").style.display=u?"none":"";document.getElementById("logoutBtn").style.display=u?"":"none";if(u){status("Firebase 연결 중...","syncing");try{await loadCloud()}catch(e){console.error(e);status("Firebase 읽기 실패 · 로컬 저장 모드")}}else{status("조회 모드 · 수정하려면 Google 로그인이 필요합니다.");render()}})}catch(e){console.error(e);status("Firebase 초기화 실패","error")}}else status("Firebase 설정 필요 · 아래 코드의 firebaseConfig를 입력하세요","error");
 render();
 </script>
 </body>
