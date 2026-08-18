@@ -6,7 +6,11 @@
 <title>1억 3천 저축 챌린지</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#f5f6f8;color:#202124;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",sans-serif}
-.container{max-width:1200px;margin:0 auto;padding:32px 20px 60px}.title{margin-bottom:24px}.title h1{margin:0 0 8px;font-size:30px}.title p{margin:0;color:#6b7280}
+.container{max-width:1200px;margin:0 auto;padding:32px 20px 60px}
+.header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;gap:16px;flex-wrap:wrap}
+.title h1{margin:0 0 8px;font-size:30px}.title p{margin:0;color:#6b7280}
+.auth-top{display:flex;align-items:center;gap:8px;background:#fff;padding:6px 12px;border:1px solid #e5e7eb;border-radius:10px;font-size:12px;color:#4b5563}
+.auth-top button{padding:6px 10px;font-size:12px;border-radius:6px}
 .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}.card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:18px}.label{font-size:13px;color:#6b7280}.value{font-size:25px;font-weight:700;margin-top:8px}.sub{font-size:12px;color:#9ca3af;margin-top:5px}
 .progress{height:10px;background:#e5e7eb;border-radius:99px;overflow:hidden;margin-top:10px}.bar{height:100%;background:#111827;width:0}
 .panel{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:20px;margin-top:18px}
@@ -21,17 +25,23 @@ button:disabled{background:#e5e7eb;color:#9ca3af;cursor:not-allowed}
 .asset-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:15px}.asset-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #eee}.asset-row:last-child{border-bottom:0}.asset-row input{width:140px;padding:8px;border:1px solid #d1d5db;border-radius:7px;text-align:right}.asset-total{font-size:24px;font-weight:700}.green{color:#15803d}.red{color:#dc2626}
 @media(max-width:800px){.asset-grid{grid-template-columns:1fr 1fr}}@media(max-width:500px){.asset-grid{grid-template-columns:1fr}}
 
-.firebase-bar{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-top:18px;padding:14px;background:#fff;border:1px solid #e5e7eb;border-radius:14px}.firebase-status{font-size:13px;color:#6b7280}.firebase-status.synced{color:#15803d}.firebase-status.syncing{color:#b45309}.firebase-status.error{color:#dc2626}.firebase-help{font-size:12px;color:#6b7280;margin-top:5px}
-
+.firebase-status{font-size:12px;color:#6b7280}.firebase-status.synced{color:#15803d}.firebase-status.syncing{color:#b45309}.firebase-status.error{color:#dc2626}
 .panel-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
 .panel-header h2{margin:0}
 </style>
 </head>
 <body>
 <div class="container">
-  <div class="title">
-    <h1>🎯 1억 3천 저축 챌린지</h1>
-    <p>월 300만원 + 매년 2월 1,500만원 추가 저축을 기준으로 실제 저축액을 기록합니다.</p>
+  <div class="header">
+    <div class="title">
+      <h1>🎯 1억 3천 저축 챌린지</h1>
+      <p>월 300만원 + 매년 2월 1,500만원 추가 저축을 기준으로 실제 저축액을 기록합니다.</p>
+    </div>
+    <div class="auth-top">
+      <span id="firebaseStatus" class="firebase-status">연결 준비 중...</span>
+      <button id="loginBtn" onclick="loginWithGoogle()">Google 로그인</button>
+      <button id="logoutBtn" class="secondary" onclick="logoutFirebase()" style="display:none">로그아웃</button>
+    </div>
   </div>
 
   <div class="panel">
@@ -53,17 +63,6 @@ button:disabled{background:#e5e7eb;color:#9ca3af;cursor:not-allowed}
     <div class="card"><div class="label">저축 목표까지 남은 금액</div><div class="value" id="remain">1억 3,000만원</div></div>
     <div class="card"><div class="label">현재 총자산</div><div class="value" id="totalAssetCard">0원</div><div class="sub">현재 자산 + 누적 저축</div></div>
     <div class="card"><div class="label">예상 목표 달성</div><div class="value" id="expected">계산 중</div><div class="sub">실제 저축 실적 반영</div></div>
-  </div>
-
-  <div class="firebase-bar">
-    <div>
-      <div id="firebaseStatus" class="firebase-status">Firebase 연결 준비 중...</div>
-      <div class="firebase-help">Google 로그인 후 저축 기록과 현재 자산이 Firebase에 저장되어 다른 PC에서도 자동 동기화됩니다.</div>
-    </div>
-    <div class="controls">
-      <button id="loginBtn" onclick="loginWithGoogle()">Google 로그인</button>
-      <button id="logoutBtn" class="secondary" onclick="logoutFirebase()" style="display:none">로그아웃</button>
-    </div>
   </div>
 
   <div class="panel">
@@ -96,13 +95,13 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChang
 import { getFirestore, doc, getDoc, setDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 // Firebase Console > 프로젝트 설정 > 내 앱(Web)에서 이 값을 실제 값으로 교체하세요.
-const firebaseConfig={
-  apiKey:"YOUR_API_KEY",
-  authDomain:"YOUR_PROJECT.firebaseapp.com",
-  projectId:"YOUR_PROJECT_ID",
-  storageBucket:"YOUR_PROJECT.firebasestorage.app",
-  messagingSenderId:"YOUR_MESSAGING_SENDER_ID",
-  appId:"YOUR_APP_ID"
+const firebaseConfig = {
+  apiKey: "AIzaSyBZgvm4ug98u-1iNfoGiL3HK8haaxualNw",
+  authDomain: "yunze-dev.firebaseapp.com",
+  projectId: "yunze-dev",
+  storageBucket: "yunze-dev.firebasestorage.app",
+  messagingSenderId: "339709581312",
+  appId: "1:339709581312:web:ca0ff40a951df6cfce20e5"
 };
 
 const TARGET=130000000, MONTHLY=3000000, FEB_EXTRA=15000000;
@@ -119,7 +118,7 @@ function months(){const a=[];let d=new Date(START);for(let i=0;i<48;i++){a.push(
 function planned(k){return MONTHLY+(k.endsWith("-02")?FEB_EXTRA:0)}
 function status(msg,cls=""){const e=document.getElementById("firebaseStatus");e.className="firebase-status "+cls;e.textContent=msg}
 function localSave(){localStorage.setItem(KEY,JSON.stringify(data));localStorage.setItem(ASSET_KEY,JSON.stringify(assets))}
-async function cloudSave(){if(!user||!cloudReady)return;clearTimeout(saveTimer);saveTimer=setTimeout(async()=>{try{status("Firebase 저장 중...","syncing");await setDoc(doc(db,"users",user.uid,"savingChallenge","main"),{data,assets,updatedAt:serverTimestamp()},{merge:true});status(`동기화됨 · ${user.email||"Google 계정"}`,"synced")}catch(e){console.error(e);status("Firebase 저장 실패 · 로컬에는 저장됨","error")}},250)}
+async function cloudSave(){if(!user||!cloudReady)return;clearTimeout(saveTimer);saveTimer=setTimeout(async()=>{try{status("저장 중...","syncing");await setDoc(doc(db,"users",user.uid,"savingChallenge","main"),{data,assets,updatedAt:serverTimestamp()},{merge:true});status(`동기화됨 (${user.email||"Google 계정"})`,"synced")}catch(e){console.error(e);status("저장 실패 (로컬 저장됨)","error")}},250)}
 function save(){localSave();cloudSave()}
 
 async function loadCloud(){
@@ -127,11 +126,11 @@ async function loadCloud(){
   const snap=await getDoc(ref);
   if(snap.exists()){const v=snap.data();if(v.data)data=v.data;if(v.assets)assets=v.assets;localSave();render()}
   else await setDoc(ref,{data,assets,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});
-  cloudReady=true;status(`실시간 동기화됨 · ${user.email||"Google 계정"}`,"synced");
+  cloudReady=true;status(`동기화됨 (${user.email||"Google 계정"})`,"synced");
   if(unsubscribe)unsubscribe();
-  unsubscribe=onSnapshot(ref,s=>{if(!s.exists())return;const v=s.data();if(v.data&&JSON.stringify(v.data)!==JSON.stringify(data)){data=v.data;localSave();render()}if(v.assets&&JSON.stringify(v.assets)!==JSON.stringify(assets)){assets=v.assets;localSave();render()}},e=>{console.error(e);status("실시간 동기화 오류","error")});
+  unsubscribe=onSnapshot(ref,s=>{if(!s.exists())return;const v=s.data();if(v.data&&JSON.stringify(v.data)!==JSON.stringify(data)){data=v.data;localSave();render()}if(v.assets&&JSON.stringify(v.assets)!==JSON.stringify(assets)){assets=v.assets;localSave();render()}},e=>{console.error(e);status("동기화 오류","error")});
 }
-async function loginWithGoogle(){try{await signInWithPopup(auth,new GoogleAuthProvider())}catch(e){console.error(e);status("Google 로그인 실패","error");alert("Google 로그인을 사용할 수 없습니다. Firebase Authentication에서 Google 제공업체를 활성화하세요.")}}
+async function loginWithGoogle(){try{await signInWithPopup(auth,new GoogleAuthProvider())}catch(e){console.error(e);status("로그인 실패","error");alert("Google 로그인을 사용할 수 없습니다. Firebase Authentication에서 Google 제공업체를 활성화하세요.")}}
 async function logoutFirebase(){if(unsubscribe)unsubscribe();unsubscribe=null;cloudReady=false;await signOut(auth)}
 window.loginWithGoogle=loginWithGoogle;window.logoutFirebase=logoutFirebase;
 
@@ -171,7 +170,7 @@ function render(){
     cumulative+=actual;
     const remain=Math.max(0,TARGET-cumulative);
     if(!hit&&cumulative>=TARGET)hit=k;
-    rows+=`<tr><td>${monthLabel(k)}</td><td>${won(MONTHLY)}</td><td>${d.getMonth()===1?won(FEB_EXTRA):"-"}</td><td><b>${won(target)}</b></td><td><input type="number" min="0" step="10000" value="${actual||""}" placeholder="${user?'직접 입력':'로그인 필요'}" ${isReadOnly} onchange="update('${k}',this.value)"></td><td class="${diff>=0?'plus':'minus'}">${actual?((diff>=0?"+":"")+won(diff)):"-"}</td><td><b>${won(cumulative)}</b></td><td>${remain?won(remain):'<span class="hit">목표 달성</span>'}</td><td>${actual?(Math.min(100,cumulative/TARGET*100).toFixed(1)+"%"):"-"}</td></tr>`
+    rows+=`<tr><td>${monthLabel(k)}</td><td>${won(MONTHLY)}</td><td>${d.getMonth()===1?won(FEB_EXTRA):"-"}</td><td><b>${won(target)}</b></td><td><input type="number" min="0" step="10000" value="${actual||""}" placeholder="" ${isReadOnly} onchange="update('${k}',this.value)"></td><td class="${diff>=0?'plus':'minus'}">${actual?((diff>=0?"+":"")+won(diff)):"-"}</td><td><b>${won(cumulative)}</b></td><td>${remain?won(remain):'<span class="hit">목표 달성</span>'}</td><td>${actual?(Math.min(100,cumulative/TARGET*100).toFixed(1)+"%"):"-"}</td></tr>`
   }
   
   document.getElementById("rows").innerHTML=rows;
@@ -215,7 +214,7 @@ function resetData(){if(!user) return; if(confirm("입력한 모든 저축 기�
 function exportCSV(){let lines=["월,기본목표,2월추가,월목표,실제저축액,차이,누적저축,남은금액,달성률"],cumulative=0;for(const d of months()){const k=monthKey(d),actual=Number(data[k]||0),target=planned(k);cumulative+=actual;lines.push([k,MONTHLY,d.getMonth()===1?FEB_EXTRA:0,target,actual,actual-target,cumulative,Math.max(0,TARGET-cumulative),(cumulative/TARGET*100).toFixed(1)+"%"].join(","))}const blob=new Blob(["\ufeff"+lines.join("\n")],{type:"text/csv;charset=utf-8"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="1억3천_저축기록.csv";a.click()}
 window.update=update;window.updateAsset=updateAsset;window.addCurrentMonth=addCurrentMonth;window.resetData=resetData;window.exportCSV=exportCSV;
 
-if(!firebaseConfig.apiKey.startsWith("YOUR_")){try{const app=initializeApp(firebaseConfig);auth=getAuth(app);db=getFirestore(app);onAuthStateChanged(auth,async u=>{user=u;document.getElementById("loginBtn").style.display=u?"none":"";document.getElementById("logoutBtn").style.display=u?"":"none";if(u){status("Firebase 연결 중...","syncing");try{await loadCloud()}catch(e){console.error(e);status("Firebase 읽기 실패 · 로컬 저장 모드")}}else{status("조회 모드 · 수정하려면 Google 로그인이 필요합니다.");render()}})}catch(e){console.error(e);status("Firebase 초기화 실패","error")}}else status("Firebase 설정 필요 · 아래 코드의 firebaseConfig를 입력하세요","error");
+if(!firebaseConfig.apiKey.startsWith("YOUR_")){try{const app=initializeApp(firebaseConfig);auth=getAuth(app);db=getFirestore(app);onAuthStateChanged(auth,async u=>{user=u;document.getElementById("loginBtn").style.display=u?"none":"";document.getElementById("logoutBtn").style.display=u?"":"none";if(u){status("연결 중...","syncing");try{await loadCloud()}catch(e){console.error(e);status("읽기 실패 (로컬 모드)")}}else{status("조회 모드");render()}})}catch(e){console.error(e);status("초기화 실패","error")}}else status("Firebase 설정 필요","error");
 render();
 </script>
 </body>
