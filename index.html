@@ -352,6 +352,27 @@ button:disabled{
   font-weight:700
 }
 
+#authGate{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+.auth-card{
+  width:100%;
+  max-width:420px;
+  background:#fff;
+  border:1px solid #e5e7eb;
+  border-radius:14px;
+  padding:28px;
+  text-align:center;
+  box-shadow:0 8px 30px rgba(0,0,0,.06)
+}
+.auth-card h1{margin:0 0 10px;font-size:24px}
+.auth-card p{margin:0 0 20px;color:#6b7280;font-size:14px;line-height:1.6}
+.auth-error{margin-top:14px;color:#dc2626;font-size:13px;line-height:1.5}
+
 @media(max-width:900px){
 
   .cards{
@@ -409,7 +430,16 @@ button:disabled{
 
 <body>
 
-<div class="container">
+<div id="authGate">
+  <div class="auth-card">
+    <h1>🎯 1억 3천 저축 챌린지</h1>
+    <p id="authMessage">Google 계정으로 로그인해주세요.</p>
+    <button id="gateLoginBtn" onclick="loginWithGoogle()">Google 로그인</button>
+    <div id="authError" class="auth-error" style="display:none"></div>
+  </div>
+</div>
+
+<div id="app" class="container" style="display:none;">
 
   <!-- 헤더 -->
   <div class="header">
@@ -912,14 +942,6 @@ const firebaseConfig = {
 
 
 // ============================================================
-// 중요
-// 본인의 Google 계정 UID를 입력하세요.
-// ============================================================
-
-const ADMIN_UID = "mPJW0ec2OFgYpYfdfIKY6DlZYV43";
-
-
-// ============================================================
 // 목표값
 // ============================================================
 
@@ -1006,6 +1028,8 @@ let db = null;
 
 let user = null;
 
+let userAllowed = false;
+
 let unsubscribe = null;
 
 let cloudReady = false;
@@ -1014,18 +1038,26 @@ let saveTimer = null;
 
 
 // ============================================================
-// 관리자 여부
+// 접근 권한
 // ============================================================
 
-function isAdmin(){
+async function hasAllowedClaim(currentUser){
 
-  return !!(
-    user &&
-    ADMIN_UID &&
-    ADMIN_UID !== "여기에_본인의_FIREBASE_UID_입력" &&
-    user.uid === ADMIN_UID
-  );
+  if(!currentUser)
+    return false;
 
+  try{
+    const tokenResult = await currentUser.getIdTokenResult(true);
+    return tokenResult.claims.allowed === true;
+  }catch(e){
+    console.error("Custom Claims 확인 실패:", e);
+    return false;
+  }
+
+}
+
+function isAllowed(){
+  return !!user && userAllowed === true;
 }
 
 
@@ -1172,7 +1204,7 @@ function localSave(){
 
 async function cloudSave(){
 
-  if(!isAdmin())
+  if(!isAllowed())
     return;
 
   if(!cloudReady)
@@ -1221,7 +1253,7 @@ async function cloudSave(){
 
 
           status(
-            "동기화됨 (관리자)",
+            "동기화됨",
             "synced"
           );
 
@@ -1333,7 +1365,7 @@ function toggleAssetPanel(){
       "block";
 
     btn.textContent =
-      isAdmin()
+      isAllowed()
         ? "자산 관리 접기"
         : "자산 조회 접기";
 
@@ -1343,7 +1375,7 @@ function toggleAssetPanel(){
       "none";
 
     btn.textContent =
-      isAdmin()
+      isAllowed()
         ? "자산 관리"
         : "자산 조회";
 
@@ -1368,7 +1400,7 @@ function renderAssets(){
 
 
   const readonly =
-    isAdmin()
+    isAllowed()
       ? ""
       : "readonly";
 
@@ -1446,7 +1478,7 @@ function renderAssets(){
 
 
   loanInput.readOnly =
-    !isAdmin();
+    !isAllowed();
 
 
   document.getElementById(
@@ -1482,7 +1514,7 @@ function render(){
 
 
   const readonly =
-    isAdmin()
+    isAllowed()
       ? ""
       : "readonly";
 
@@ -1820,97 +1852,31 @@ function render(){
 
 
   // ----------------------------------------------------------
-  // 관리자 / 조회자 UI
+  // 허용 사용자 UI
   // ----------------------------------------------------------
 
-  const toggleBtn =
-    document.getElementById(
-      "toggleAssetBtn"
-    );
+  const toggleBtn = document.getElementById("toggleAssetBtn");
+  const addBtn = document.getElementById("addMonthBtn");
+  const resetBtn = document.getElementById("resetBtn");
+  const permissionBadge = document.getElementById("permissionBadge");
+  const assetNotice = document.getElementById("assetNotice");
 
-  const addBtn =
-    document.getElementById(
-      "addMonthBtn"
-    );
+  permissionBadge.className = "admin-badge";
+  permissionBadge.textContent = "수정 가능";
 
-  const resetBtn =
-    document.getElementById(
-      "resetBtn"
-    );
+  const assetContainer = document.getElementById("assetContainer");
+  toggleBtn.textContent =
+    assetContainer.style.display === "none"
+      ? "자산 관리"
+      : "자산 관리 접기";
 
-  const assetContainer =
-    document.getElementById(
-      "assetContainer"
-    );
+  assetNotice.textContent =
+    "접근 권한이 확인된 사용자입니다. 현재 자산, 대출금액, 월별 저축액을 조회하고 수정할 수 있습니다.";
 
-  const permissionBadge =
-    document.getElementById(
-      "permissionBadge"
-    );
+  addBtn.disabled = false;
+  resetBtn.disabled = false;
 
-  const assetNotice =
-    document.getElementById(
-      "assetNotice"
-    );
-
-
-  if(isAdmin()){
-
-    permissionBadge.className =
-      "admin-badge";
-
-    permissionBadge.textContent =
-      "관리자";
-
-    toggleBtn.textContent =
-      assetContainer.style.display === "none"
-        ? "자산 관리"
-        : "자산 관리 접기";
-
-
-    assetNotice.textContent =
-      "관리자 계정입니다. 현재 자산, 대출금액, 월별 저축액을 수정할 수 있습니다.";
-
-
-    addBtn.disabled =
-      false;
-
-    resetBtn.disabled =
-      false;
-
-
-    status(
-      "관리자 모드",
-      "synced"
-    );
-
-
-  }else{
-
-    permissionBadge.className =
-      "readonly-badge";
-
-    permissionBadge.textContent =
-      "조회 전용";
-
-
-    toggleBtn.textContent =
-      assetContainer.style.display === "none"
-        ? "자산 조회"
-        : "자산 조회 접기";
-
-
-    assetNotice.textContent =
-      "조회 전용입니다. 현재 자산과 대출금액은 조회할 수 있지만 수정할 수 없습니다.";
-
-
-    addBtn.disabled =
-      true;
-
-    resetBtn.disabled =
-      true;
-
-  }
+  status("동기화됨", "synced");
 
 }
 
@@ -1976,7 +1942,7 @@ function estimate(cumulative){
 
 function update(k,v){
 
-  if(!isAdmin())
+  if(!isAllowed())
     return;
 
 
@@ -2001,7 +1967,7 @@ window.update =
 
 function updateAsset(name,v){
 
-  if(!isAdmin())
+  if(!isAllowed())
     return;
 
 
@@ -2026,7 +1992,7 @@ window.updateAsset =
 
 function updateLoan(v){
 
-  if(!isAdmin())
+  if(!isAllowed())
     return;
 
 
@@ -2051,7 +2017,7 @@ window.updateLoan =
 
 function addCurrentMonth(){
 
-  if(!isAdmin())
+  if(!isAllowed())
     return;
 
 
@@ -2091,7 +2057,7 @@ window.addCurrentMonth =
 
 function resetData(){
 
-  if(!isAdmin())
+  if(!isAllowed())
     return;
 
 
@@ -2280,176 +2246,98 @@ if(
       getFirestore(app);
 
 
+    const sharedRef = doc(db, "savingChallenge", "main");
+
     // ========================================================
-    // 핵심
-    //
-    // 로그인 여부와 관계없이
-    // 모든 사용자가 같은 문서를 조회
+    // 인증 + Custom Claims 권한 확인
     // ========================================================
 
-    const sharedRef =
-      doc(
-        db,
-        "savingChallenge",
-        "main"
-      );
+    onAuthStateChanged(auth, async (u) => {
 
+      user = u;
+      userAllowed = false;
+      cloudReady = false;
 
-    unsubscribe =
-      onSnapshot(
+      if(unsubscribe){
+        unsubscribe();
+        unsubscribe = null;
+      }
 
+      document.getElementById("loginBtn").style.display = u ? "none" : "";
+      document.getElementById("logoutBtn").style.display = u ? "" : "none";
+
+      const authGate = document.getElementById("authGate");
+      const appEl = document.getElementById("app");
+      const authMessage = document.getElementById("authMessage");
+      const authError = document.getElementById("authError");
+
+      authError.style.display = "none";
+
+      if(!u){
+        authGate.style.display = "flex";
+        appEl.style.display = "none";
+        authMessage.textContent = "Google 계정으로 로그인해주세요.";
+        status("로그인 필요", "");
+        return;
+      }
+
+      authGate.style.display = "flex";
+      appEl.style.display = "none";
+      authMessage.textContent = "접근 권한을 확인하고 있습니다...";
+      status("권한 확인 중...", "syncing");
+
+      const allowed = await hasAllowedClaim(u);
+
+      if(!allowed){
+        alert(
+    "이 계정은 접근 권한이 없습니다.\n\n" +
+    "관리자에게 접근 권한(allowed=true)을 요청하세요."
+);
+        status("접근 권한 없음", "error");
+        await signOut(auth);
+        return;
+      }
+
+      userAllowed = true;
+      authGate.style.display = "none";
+      appEl.style.display = "block";
+
+      console.log("접근 허용 UID:", u.uid);
+
+      // 권한 확인이 끝난 사용자에게만 Firestore listener 연결
+      unsubscribe = onSnapshot(
         sharedRef,
-
         snapshot => {
-
           cloudReady = true;
 
-
-          if(
-            snapshot.exists()
-          ){
-
-            const v =
-              snapshot.data();
-
+          if(snapshot.exists()){
+            const v = snapshot.data();
 
             if(v.data)
               data = v.data;
 
-
             if(v.assets)
               assets = v.assets;
 
-
-            if(
-              v.loanAmount !==
-              undefined
-            ){
-
-              loanAmount =
-                Number(
-                  v.loanAmount
-                ) || 0;
-
+            if(v.loanAmount !== undefined){
+              loanAmount = Number(v.loanAmount) || 0;
             }
 
-
             localSave();
-
           }
-
 
           render();
-
-
-          if(isAdmin()){
-
-            status(
-              "관리자 모드",
-              "synced"
-            );
-
-          }else{
-
-            status(
-              "실시간 조회 중",
-              "synced"
-            );
-
-          }
-
+          status("동기화됨", "synced");
         },
-
         error => {
-
-          console.error(
-            "Firestore 조회 오류:",
-            error
-          );
-
-
-          cloudReady =
-            false;
-
-
-          status(
-            "Firestore 조회 실패",
-            "error"
-          );
-
-
-          // Firestore에 문제가 있어도
-          // 기존 로컬 데이터를 화면에 표시
-          render();
-
+          console.error("Firestore 조회 오류:", error);
+          cloudReady = false;
+          status("Firestore 조회 실패", "error");
         }
-
       );
 
-
-    // ========================================================
-    // 로그인 상태
-    // ========================================================
-
-    onAuthStateChanged(
-
-      auth,
-
-      u => {
-
-        user = u;
-
-
-        document.getElementById(
-          "loginBtn"
-        ).style.display =
-          u ? "none" : "";
-
-
-        document.getElementById(
-          "logoutBtn"
-        ).style.display =
-          u ? "" : "none";
-
-
-        console.log(
-          "현재 로그인 UID:",
-          u?.uid || "비로그인"
-        );
-
-
-        if(
-          isAdmin()
-        ){
-
-          status(
-            "관리자 모드",
-            "synced"
-          );
-
-        }else if(u){
-
-          status(
-            "조회 전용",
-            "synced"
-          );
-
-        }else{
-
-          status(
-            "실시간 조회 중",
-            "synced"
-          );
-
-        }
-
-
-        render();
-
-      }
-
-    );
-
+      render();
+    });
 
   }catch(e){
 
@@ -2471,9 +2359,6 @@ if(
 
 }
 
-
-// 최초 렌더링
-render();
 
 </script>
 
