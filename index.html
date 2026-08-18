@@ -1,19 +1,61 @@
-
 <!doctype html>
 <html lang="ko">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>1억 3천 저축 챌린지</title>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#f5f6f8;color:#202124;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",sans-serif}
-.container{max-width:1200px;margin:0 auto;padding:32px 20px 60px}
-.header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;gap:16px;flex-wrap:wrap}
-.title h1{margin:0 0 8px;font-size:30px}
-.title p{margin:0;color:#6b7280}
-.auth-top{display:flex;align-items:center;gap:8px;background:#fff;padding:6px 12px;border:1px solid #e5e7eb;border-radius:10px;font-size:12px;color:#4b5563}
-.auth-top button{padding:6px 10px;font-size:12px}
+
+body{
+  margin:0;
+  background:#f5f6f8;
+  color:#202124;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",sans-serif
+}
+
+.container{
+  max-width:1200px;
+  margin:0 auto;
+  padding:32px 20px 60px
+}
+
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  margin-bottom:24px;
+  gap:16px;
+  flex-wrap:wrap
+}
+
+.title h1{
+  margin:0 0 8px;
+  font-size:30px
+}
+
+.title p{
+  margin:0;
+  color:#6b7280
+}
+
+.auth-top{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  background:#fff;
+  padding:6px 12px;
+  border:1px solid #e5e7eb;
+  border-radius:10px;
+  font-size:12px;
+  color:#4b5563
+}
+
+.auth-top button{
+  padding:6px 10px;
+  font-size:12px
+}
 
 .cards{
   display:grid;
@@ -29,9 +71,22 @@ body{margin:0;background:#f5f6f8;color:#202124;font-family:-apple-system,BlinkMa
   padding:18px
 }
 
-.label{font-size:13px;color:#6b7280}
-.value{font-size:25px;font-weight:700;margin-top:8px}
-.sub{font-size:12px;color:#9ca3af;margin-top:5px}
+.label{
+  font-size:13px;
+  color:#6b7280
+}
+
+.value{
+  font-size:25px;
+  font-weight:700;
+  margin-top:8px
+}
+
+.sub{
+  font-size:12px;
+  color:#9ca3af;
+  margin-top:5px
+}
 
 .progress{
   height:10px;
@@ -44,7 +99,8 @@ body{margin:0;background:#f5f6f8;color:#202124;font-family:-apple-system,BlinkMa
 .bar{
   height:100%;
   background:#111827;
-  width:0
+  width:0;
+  transition:width .3s ease
 }
 
 .panel{
@@ -55,7 +111,10 @@ body{margin:0;background:#f5f6f8;color:#202124;font-family:-apple-system,BlinkMa
   margin-top:18px
 }
 
-.panel h2{font-size:18px;margin:0 0 14px}
+.panel h2{
+  font-size:18px;
+  margin:0 0 14px
+}
 
 .controls{
   display:flex;
@@ -85,7 +144,9 @@ button:disabled{
   cursor:not-allowed
 }
 
-.table-wrap{overflow:auto}
+.table-wrap{
+  overflow:auto
+}
 
 .table{
   width:100%;
@@ -120,10 +181,24 @@ button:disabled{
   text-align:right
 }
 
-.plus{color:#15803d;font-weight:700}
-.minus{color:#dc2626;font-weight:700}
-.hit{color:#15803d;font-weight:700}
-.muted{color:#9ca3af}
+.plus{
+  color:#15803d;
+  font-weight:700
+}
+
+.minus{
+  color:#dc2626;
+  font-weight:700
+}
+
+.hit{
+  color:#15803d;
+  font-weight:700
+}
+
+.muted{
+  color:#9ca3af
+}
 
 .notice{
   background:#f9fafb;
@@ -219,17 +294,30 @@ button:disabled{
   font-weight:700
 }
 
-.green{color:#15803d}
-.red{color:#dc2626}
+.green{
+  color:#15803d
+}
+
+.red{
+  color:#dc2626
+}
 
 .firebase-status{
   font-size:12px;
   color:#6b7280
 }
 
-.firebase-status.synced{color:#15803d}
-.firebase-status.syncing{color:#b45309}
-.firebase-status.error{color:#dc2626}
+.firebase-status.synced{
+  color:#15803d
+}
+
+.firebase-status.syncing{
+  color:#b45309
+}
+
+.firebase-status.error{
+  color:#dc2626
+}
 
 .panel-header{
   display:flex;
@@ -238,76 +326,192 @@ button:disabled{
   margin-bottom:14px
 }
 
-.panel-header h2{margin:0}
+.panel-header h2{
+  margin:0
+}
+
+.admin-badge{
+  display:inline-block;
+  margin-left:6px;
+  padding:3px 7px;
+  border-radius:6px;
+  background:#ecfdf5;
+  color:#15803d;
+  font-size:11px;
+  font-weight:700
+}
+
+.readonly-badge{
+  display:inline-block;
+  margin-left:6px;
+  padding:3px 7px;
+  border-radius:6px;
+  background:#f3f4f6;
+  color:#6b7280;
+  font-size:11px;
+  font-weight:700
+}
 
 @media(max-width:900px){
-  .cards{grid-template-columns:repeat(2,1fr)}
-  .asset-grid{grid-template-columns:1fr 1fr}
-  .total-summary{grid-template-columns:1fr 1fr}
+
+  .cards{
+    grid-template-columns:repeat(2,1fr)
+  }
+
+  .asset-grid{
+    grid-template-columns:1fr 1fr
+  }
+
+  .total-summary{
+    grid-template-columns:1fr 1fr
+  }
+
 }
 
 @media(max-width:800px){
-  .container{padding:20px 12px}
-  .value{font-size:21px}
+
+  .container{
+    padding:20px 12px
+  }
+
+  .value{
+    font-size:21px
+  }
+
 }
 
 @media(max-width:500px){
-  .cards{grid-template-columns:1fr}
-  .asset-grid{grid-template-columns:1fr}
-  .total-summary{grid-template-columns:1fr}
+
+  .cards{
+    grid-template-columns:1fr
+  }
+
+  .asset-grid{
+    grid-template-columns:1fr
+  }
+
+  .total-summary{
+    grid-template-columns:1fr
+  }
+
   .loan-row{
     flex-direction:column;
     align-items:flex-start
   }
-  .loan-row input{width:100%}
+
+  .loan-row input{
+    width:100%
+  }
+
 }
 </style>
 </head>
 
 <body>
+
 <div class="container">
 
+  <!-- 헤더 -->
   <div class="header">
+
     <div class="title">
+
       <h1>🎯 1억 3천 저축 챌린지</h1>
-      <p>월 300만원 + 매년 2월 1,500만원 추가 저축을 기준으로 실제 저축액을 기록합니다.</p>
+
+      <p>
+        월 300만원 + 매년 2월 1,500만원 추가 저축을 기준으로
+        실제 저축액을 기록합니다.
+      </p>
+
     </div>
 
     <div class="auth-top">
-      <span id="firebaseStatus" class="firebase-status">연결 준비 중...</span>
-      <button id="loginBtn" onclick="loginWithGoogle()">Google 로그인</button>
-      <button id="logoutBtn" class="secondary" onclick="logoutFirebase()" style="display:none">로그아웃</button>
+
+      <span
+        id="firebaseStatus"
+        class="firebase-status"
+      >
+        연결 준비 중...
+      </span>
+
+      <button
+        id="loginBtn"
+        onclick="loginWithGoogle()"
+      >
+        Google 로그인
+      </button>
+
+      <button
+        id="logoutBtn"
+        class="secondary"
+        onclick="logoutFirebase()"
+        style="display:none"
+      >
+        로그아웃
+      </button>
+
     </div>
+
   </div>
+
 
   <!-- 현재 자산 -->
   <div class="panel">
+
     <div class="panel-header">
-      <h2>현재 자산</h2>
-      <button id="toggleAssetBtn"
-              class="secondary"
-              onclick="toggleAssetPanel()"
-              disabled>
-        자산 관리 (로그인 필요)
+
+      <h2>
+        현재 자산
+        <span
+          id="permissionBadge"
+          class="readonly-badge"
+        >
+          조회
+        </span>
+      </h2>
+
+      <button
+        id="toggleAssetBtn"
+        class="secondary"
+        onclick="toggleAssetPanel()"
+      >
+        자산 조회
       </button>
+
     </div>
 
     <div class="asset-total">
-      현재 총자산 <span id="assetTotal">0원</span>
+
+      현재 총자산
+      <span id="assetTotal">0원</span>
+
     </div>
 
-    <div id="assetContainer" style="display:none; margin-top:15px;">
 
-      <div class="notice">
-        현재 자산과 대출금액은 로그인 후 수정할 수 있습니다.
-        금액을 변경하면 합산 금액이 자동으로 계산됩니다.
+    <div
+      id="assetContainer"
+      style="display:none;margin-top:15px;"
+    >
+
+      <div
+        class="notice"
+        id="assetNotice"
+      >
+        현재 자산과 대출금액을 조회할 수 있습니다.
       </div>
 
-      <div class="asset-grid" id="assets"></div>
 
-      <!-- 대출금액 -->
+      <div
+        class="asset-grid"
+        id="assets"
+      ></div>
+
+
+      <!-- 대출 -->
       <div class="loan-box">
+
         <div class="loan-row">
+
           <label for="loanAmount">
             대출금액
           </label>
@@ -320,175 +524,329 @@ button:disabled{
             value="0"
             onchange="updateLoan(this.value)"
           >
+
         </div>
+
       </div>
+
 
       <!-- 합산 정보 -->
       <div class="total-summary">
 
         <div class="total-summary-item">
-          <div class="summary-label">현재 자산</div>
-          <div class="summary-value" id="assetSummary">0원</div>
+
+          <div class="summary-label">
+            현재 자산
+          </div>
+
+          <div
+            class="summary-value"
+            id="assetSummary"
+          >
+            0원
+          </div>
+
         </div>
 
-        <div class="total-summary-item">
-          <div class="summary-label">대출금액</div>
-          <div class="summary-value" id="loanSummary">0원</div>
-        </div>
 
         <div class="total-summary-item">
-          <div class="summary-label">자산 + 대출</div>
-          <div class="summary-value green" id="assetLoanSummary">0원</div>
+
+          <div class="summary-label">
+            대출금액
+          </div>
+
+          <div
+            class="summary-value"
+            id="loanSummary"
+          >
+            0원
+          </div>
+
+        </div>
+
+
+        <div class="total-summary-item">
+
+          <div class="summary-label">
+            자산 + 대출
+          </div>
+
+          <div
+            class="summary-value green"
+            id="assetLoanSummary"
+          >
+            0원
+          </div>
+
         </div>
 
       </div>
 
     </div>
+
   </div>
+
 
   <!-- 상단 카드 -->
-    <!-- <div class="card">
-      <div class="label">목표 금액</div>
-      <div class="value">1억 3,000만원</div>
-    </div>
+  <div class="cards">
 
+
+    <!-- 저축 진행률 -->
     <div class="card">
-      <div class="label">저축 목표 누적액</div>
-      <div class="value" id="saved">0원</div>
 
-      <div class="progress">
-        <div class="bar" id="bar"></div>
+      <div class="label">
+        저축 진행률
       </div>
 
-      <div class="sub" id="rate">0.0%</div>
-    </div> -->
+      <div class="value">
 
+        <span id="saved">
+          0원
+        </span>
+
+        <span
+          style="
+            font-size:18px;
+            color:#9ca3af;
+            font-weight:500;
+          "
+        >
+          / 1억 3,000만원
+        </span>
+
+      </div>
+
+      <div class="progress">
+
+        <div
+          class="bar"
+          id="bar"
+        ></div>
+
+      </div>
+
+      <div
+        class="sub"
+        id="rate"
+      >
+        0.0%
+      </div>
+
+
+      <div
+        style="
+          margin-top:12px;
+          padding-top:12px;
+          border-top:1px solid #eee;
+          font-size:13px;
+          color:#6b7280;
+        "
+      >
+
+        목표까지 남은 금액
+
+        <strong
+          id="remain"
+          style="
+            float:right;
+            color:#202124;
+            font-size:14px;
+          "
+        >
+          1억 3,000만원
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <!-- 자산 + 대출 + 저축 -->
     <div class="card">
-  <div class="label">저축 진행률</div>
 
-  <div class="value">
-    <span id="saved">0원</span>
-    <span style="font-size:18px;color:#9ca3af;font-weight:500;">
-      / 1억 3,000만원
-    </span>
-  </div>
+      <div class="label">
+        자산 + 대출 + 저축
+      </div>
 
-  <div class="progress">
-    <div class="bar" id="bar"></div>
-  </div>
+      <div class="value">
 
-  <div class="sub" id="rate">0.0%</div>
+        <span id="totalAssetCard">
+          0원
+        </span>
 
-  <div style="
-    margin-top:12px;
-    padding-top:12px;
-    border-top:1px solid #eee;
-    font-size:13px;
-    color:#6b7280;
-  ">
-    목표까지 남은 금액
-    <strong
-      id="remain"
-      style="float:right;color:#202124;font-size:14px;"
-    >1억 3,000만원</strong>
-  </div>
-</div>
+        <span
+          style="
+            font-size:18px;
+            color:#9ca3af;
+            font-weight:500;
+          "
+        >
+          / 13억 1,000만원
+        </span>
 
-<div class="card">
-  <div class="label">자산 + 대출 + 저축</div>
+      </div>
 
-  <div class="value">
-    <span id="totalAssetCard">0원</span>
-    <span style="font-size:18px;color:#9ca3af;font-weight:500;">
-      / 13억 1,000만원
-    </span>
-  </div>
+      <div class="progress">
 
-  <div class="progress">
-    <div class="bar" id="totalAssetBar"></div>
-  </div>
+        <div
+          class="bar"
+          id="totalAssetBar"
+        ></div>
 
-  <div class="sub" id="totalAssetRate">0.0%</div>
+      </div>
 
-  <div style="
-    margin-top:12px;
-    padding-top:12px;
-    border-top:1px solid #eee;
-    font-size:13px;
-    color:#6b7280;
-  ">
-    목표금액
-    <strong
-      style="float:right;color:#202124;font-size:14px;"
-    >
-      13억 1,000만원
-    </strong>
-  </div>
-</div>
+      <div
+        class="sub"
+        id="totalAssetRate"
+      >
+        0.0%
+      </div>
 
-<div class="card">
-  <div class="label">자산 + 저축</div>
-  <div class="value" id="assetSavingCard">0원</div>
-  <div class="sub">현재자산 + 누적 저축</div>
-</div>
 
+      <div
+        style="
+          margin-top:12px;
+          padding-top:12px;
+          border-top:1px solid #eee;
+          font-size:13px;
+          color:#6b7280;
+        "
+      >
+
+        목표금액
+
+        <strong
+          style="
+            float:right;
+            color:#202124;
+            font-size:14px;
+          "
+        >
+          13억 1,000만원
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <!-- 자산 + 저축 -->
     <div class="card">
-      <div class="label">예상 목표 달성</div>
-      <div class="value" id="expected">계산 중</div>
-      <div class="sub">실제 저축 실적 반영</div>
+
+      <div class="label">
+        자산 + 저축
+      </div>
+
+      <div
+        class="value"
+        id="assetSavingCard"
+      >
+        0원
+      </div>
+
+      <div class="sub">
+        현재자산 + 누적 저축
+      </div>
+
+    </div>
+
+
+    <!-- 예상 -->
+    <div class="card">
+
+      <div class="label">
+        예상 저축 목표 달성
+      </div>
+
+      <div
+        class="value"
+        id="expected"
+      >
+        계산 중
+      </div>
+
+      <div class="sub">
+        실제 저축 실적 반영
+      </div>
+
     </div>
 
   </div>
+
 
   <!-- 이번 달 -->
   <div class="panel">
 
-    <h2>이번 달 요약</h2>
+    <h2>
+      이번 달 요약
+    </h2>
 
-    <div class="notice" id="summary">
-      월별 실제 저축액을 입력하면 목표 대비 초과/미달과 누적 저축액이 자동 계산됩니다.
+    <div
+      class="notice"
+      id="summary"
+    >
+      월별 실제 저축액을 입력하면
+      목표 대비 초과/미달과 누적 저축액이 자동 계산됩니다.
     </div>
 
     <div class="controls">
-      <button id="addMonthBtn" onclick="addCurrentMonth()" disabled>
+
+      <button
+        id="addMonthBtn"
+        onclick="addCurrentMonth()"
+        disabled
+      >
         이번 달 추가
       </button>
 
-      <button id="resetBtn"
-              class="secondary"
-              onclick="resetData()"
-              disabled>
+      <button
+        id="resetBtn"
+        class="secondary"
+        onclick="resetData()"
+        disabled
+      >
         전체 초기화
       </button>
 
-      <button class="secondary" onclick="exportCSV()">
+      <button
+        class="secondary"
+        onclick="exportCSV()"
+      >
         CSV 내보내기
       </button>
+
     </div>
 
   </div>
 
+
   <!-- 월별 기록 -->
   <div class="panel">
 
-    <h2>월별 저축 기록</h2>
+    <h2>
+      월별 저축 기록
+    </h2>
 
     <div class="table-wrap">
 
       <table class="table">
 
         <thead>
-        <tr>
-          <th>월</th>
-          <th>기본 목표</th>
-          <th>2월 추가</th>
-          <th>월 목표</th>
-          <th>실제 저축액</th>
-          <th>차이</th>
-          <th>누적 저축</th>
-          <th>남은 금액</th>
-          <th>달성률</th>
-        </tr>
+
+          <tr>
+
+            <th>월</th>
+            <th>기본 목표</th>
+            <th>2월 추가</th>
+            <th>월 목표</th>
+            <th>실제 저축액</th>
+            <th>차이</th>
+            <th>누적 저축</th>
+            <th>남은 금액</th>
+            <th>달성률</th>
+
+          </tr>
+
         </thead>
 
         <tbody id="rows"></tbody>
@@ -501,10 +859,11 @@ button:disabled{
 
 </div>
 
+
 <script type="module">
 
 import { initializeApp }
-  from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 
 import {
   getAuth,
@@ -518,7 +877,6 @@ from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 import {
   getFirestore,
   doc,
-  getDoc,
   setDoc,
   onSnapshot,
   serverTimestamp
@@ -526,123 +884,266 @@ import {
 from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 
+// ============================================================
 // Firebase 설정
+// ============================================================
+
 const firebaseConfig = {
-  apiKey: "AIzaSyBZgvm4ug98u-1iNfoGiL3HK8haaxualNw",
-  authDomain: "yunze-dev.firebaseapp.com",
-  projectId: "yunze-dev",
-  storageBucket: "yunze-dev.firebasestorage.app",
-  messagingSenderId: "339709581312",
-  appId: "1:339709581312:web:ca0ff40a951df6cfce20e5"
+
+  apiKey:
+    "AIzaSyBZgvm4ug98u-1iNfoGiL3HK8haaxualNw",
+
+  authDomain:
+    "yunze-dev.firebaseapp.com",
+
+  projectId:
+    "yunze-dev",
+
+  storageBucket:
+    "yunze-dev.firebasestorage.app",
+
+  messagingSenderId:
+    "339709581312",
+
+  appId:
+    "1:339709581312:web:ca0ff40a951df6cfce20e5"
+
 };
 
 
+// ============================================================
+// 중요
+// 본인의 Google 계정 UID를 입력하세요.
+// ============================================================
+
+const ADMIN_UID = "mPJW0ec2OFgYpYfdfIKY6DlZYV43";
+
+
+// ============================================================
+// 목표값
+// ============================================================
+
 const TARGET = 130000000;
+
 const TOTAL_ASSET_TARGET = 1310000000;
+
 const MONTHLY = 3000000;
+
 const FEB_EXTRA = 15000000;
 
 const START = new Date(2026,7,1);
 
-const KEY = "savingChallenge130m";
-const ASSET_KEY = "savingChallengeAssets";
-const LOAN_KEY = "savingChallengeLoan";
+
+// ============================================================
+// LocalStorage
+// ============================================================
+
+const KEY =
+  "savingChallenge130m";
+
+const ASSET_KEY =
+  "savingChallengeAssets";
+
+const LOAN_KEY =
+  "savingChallengeLoan";
+
+
+// ============================================================
+// 기본 자산
+// ============================================================
 
 const DEFAULT_ASSETS = {
-  "주식":60000000,
-  "청약통장":17500000,
-  "현금":12000000,
-  "비트코인":15000000,
-  "기존 상환한 부채 효과":8000000,
-  "아파트 매도 후 순수금액":450000000
+
+  "주식":
+    60000000,
+
+  "청약통장":
+    17500000,
+
+  "현금":
+    12000000,
+
+  "비트코인":
+    15000000,
+
+  "기존 상환한 부채 효과":
+    8000000,
+
+  "아파트 매도 후 순수금액":
+    450000000
+
 };
 
 
-// 초기 데이터
-let data = JSON.parse(
-  localStorage.getItem(KEY) || "{}"
-);
+// ============================================================
+// 로컬 데이터
+// ============================================================
 
-let assets = JSON.parse(
-  localStorage.getItem(ASSET_KEY) ||
-  JSON.stringify(DEFAULT_ASSETS)
-);
+let data =
+  JSON.parse(
+    localStorage.getItem(KEY) || "{}"
+  );
 
-let loanAmount = Number(
-  localStorage.getItem(LOAN_KEY) || 0
-);
+let assets =
+  JSON.parse(
+    localStorage.getItem(ASSET_KEY) ||
+    JSON.stringify(DEFAULT_ASSETS)
+  );
 
+let loanAmount =
+  Number(
+    localStorage.getItem(LOAN_KEY) || 0
+  );
+
+
+// ============================================================
+// Firebase 상태
+// ============================================================
 
 let auth = null;
+
 let db = null;
+
 let user = null;
+
 let unsubscribe = null;
+
 let cloudReady = false;
+
 let saveTimer = null;
 
 
-// 금액 포맷
+// ============================================================
+// 관리자 여부
+// ============================================================
+
+function isAdmin(){
+
+  return !!(
+    user &&
+    ADMIN_UID &&
+    ADMIN_UID !== "여기에_본인의_FIREBASE_UID_입력" &&
+    user.uid === ADMIN_UID
+  );
+
+}
+
+
+// ============================================================
+// 금액
+// ============================================================
+
 function won(n){
-  return Math.round(Number(n)||0).toLocaleString("ko-KR")+"원";
+
+  return (
+    Math.round(Number(n)||0)
+      .toLocaleString("ko-KR")
+    + "원"
+  );
+
 }
 
 
+// ============================================================
 // 월 Key
+// ============================================================
+
 function monthKey(d){
-  return d.getFullYear()+"-"+
-    String(d.getMonth()+1).padStart(2,"0");
+
+  return (
+    d.getFullYear()
+    + "-"
+    + String(
+        d.getMonth()+1
+      ).padStart(2,"0")
+  );
+
 }
 
 
+// ============================================================
 // 월 표시
+// ============================================================
+
 function monthLabel(k){
-  let [y,m] = k.split("-");
+
+  const [y,m] =
+    k.split("-");
+
   return `${y}년 ${Number(m)}월`;
+
 }
 
 
+// ============================================================
 // 월 목록
+// ============================================================
+
 function months(){
 
   const a = [];
-  let d = new Date(START);
+
+  let d =
+    new Date(START);
 
   for(let i=0;i<48;i++){
 
-    a.push(new Date(d));
+    a.push(
+      new Date(d)
+    );
 
-    d.setMonth(d.getMonth()+1);
+    d.setMonth(
+      d.getMonth()+1
+    );
 
   }
 
   return a;
+
 }
 
 
+// ============================================================
 // 월 목표
+// ============================================================
+
 function planned(k){
 
-  return MONTHLY +
-    (k.endsWith("-02") ? FEB_EXTRA : 0);
+  return (
+    MONTHLY +
+    (
+      k.endsWith("-02")
+        ? FEB_EXTRA
+        : 0
+    )
+  );
 
 }
 
 
+// ============================================================
 // Firebase 상태
+// ============================================================
+
 function status(msg,cls=""){
 
   const e =
-    document.getElementById("firebaseStatus");
+    document.getElementById(
+      "firebaseStatus"
+    );
 
   e.className =
-    "firebase-status "+cls;
+    "firebase-status " + cls;
 
   e.textContent = msg;
 
 }
 
 
-// 로컬 저장
+// ============================================================
+// LocalStorage 저장
+// ============================================================
+
 function localSave(){
 
   localStorage.setItem(
@@ -663,187 +1164,103 @@ function localSave(){
 }
 
 
-// Firebase 저장
+// ============================================================
+// Firestore 저장
+//
+// 반드시 관리자만 실행
+// ============================================================
+
 async function cloudSave(){
 
-  if(!user || !cloudReady) return;
+  if(!isAdmin())
+    return;
+
+  if(!cloudReady)
+    return;
 
   clearTimeout(saveTimer);
 
-  saveTimer = setTimeout(async()=>{
+  saveTimer =
+    setTimeout(
+      async()=>{
 
-    try{
+        try{
 
-      status("저장 중...","syncing");
+          status(
+            "저장 중...",
+            "syncing"
+          );
 
-      await setDoc(
-        doc(
-          db,
-          "users",
-          user.uid,
-          "savingChallenge",
-          "main"
-        ),
-        {
-          data,
-          assets,
-          loanAmount,
-          updatedAt:serverTimestamp()
-        },
-        {
-          merge:true
+
+          await setDoc(
+
+            doc(
+              db,
+              "savingChallenge",
+              "main"
+            ),
+
+            {
+
+              data,
+
+              assets,
+
+              loanAmount,
+
+              updatedAt:
+                serverTimestamp()
+
+            },
+
+            {
+              merge:true
+            }
+
+          );
+
+
+          status(
+            "동기화됨 (관리자)",
+            "synced"
+          );
+
+
+        }catch(e){
+
+          console.error(e);
+
+          status(
+            "저장 실패",
+            "error"
+          );
+
         }
-      );
 
-      status(
-        `동기화됨 (${user.email||"Google 계정"})`,
-        "synced"
-      );
-
-    }catch(e){
-
-      console.error(e);
-
-      status(
-        "저장 실패 (로컬 저장됨)",
-        "error"
-      );
-
-    }
-
-  },250);
+      },
+      250
+    );
 
 }
 
 
-// 전체 저장
+// ============================================================
+// 저장
+// ============================================================
+
 function save(){
 
   localSave();
+
   cloudSave();
 
 }
 
 
-// Firebase 데이터 로드
-async function loadCloud(){
-
-  const ref = doc(
-    db,
-    "users",
-    user.uid,
-    "savingChallenge",
-    "main"
-  );
-
-  const snap = await getDoc(ref);
-
-  if(snap.exists()){
-
-    const v = snap.data();
-
-    if(v.data)
-      data = v.data;
-
-    if(v.assets)
-      assets = v.assets;
-
-    if(v.loanAmount !== undefined)
-      loanAmount = Number(v.loanAmount)||0;
-
-    localSave();
-    render();
-
-  }else{
-
-    await setDoc(
-      ref,
-      {
-        data,
-        assets,
-        loanAmount,
-        createdAt:serverTimestamp(),
-        updatedAt:serverTimestamp()
-      }
-    );
-
-  }
-
-
-  cloudReady = true;
-
-  status(
-    `동기화됨 (${user.email||"Google 계정"})`,
-    "synced"
-  );
-
-
-  if(unsubscribe)
-    unsubscribe();
-
-
-  unsubscribe = onSnapshot(
-    ref,
-    s=>{
-
-      if(!s.exists()) return;
-
-      const v = s.data();
-
-      if(
-        v.data &&
-        JSON.stringify(v.data)!==
-        JSON.stringify(data)
-      ){
-
-        data = v.data;
-
-      }
-
-
-      if(
-        v.assets &&
-        JSON.stringify(v.assets)!==
-        JSON.stringify(assets)
-      ){
-
-        assets = v.assets;
-
-      }
-
-
-      if(
-        v.loanAmount !== undefined &&
-        Number(v.loanAmount)!==
-        Number(loanAmount)
-      ){
-
-        loanAmount =
-          Number(v.loanAmount)||0;
-
-      }
-
-
-      localSave();
-      render();
-
-    },
-    e=>{
-
-      console.error(e);
-
-      status(
-        "동기화 오류",
-        "error"
-      );
-
-    }
-  );
-
-}
-
-
+// ============================================================
 // Google 로그인
+// ============================================================
+
 async function loginWithGoogle(){
 
   try{
@@ -863,7 +1280,8 @@ async function loginWithGoogle(){
     );
 
     alert(
-      "Google 로그인을 사용할 수 없습니다. Firebase Authentication에서 Google 제공업체를 활성화하세요."
+      "Google 로그인을 사용할 수 없습니다.\n\n" +
+      "Firebase Authentication에서 Google 로그인을 활성화했는지 확인하세요."
     );
 
   }
@@ -871,43 +1289,63 @@ async function loginWithGoogle(){
 }
 
 
+window.loginWithGoogle =
+  loginWithGoogle;
+
+
+// ============================================================
 // 로그아웃
+// ============================================================
+
 async function logoutFirebase(){
-
-  if(unsubscribe)
-    unsubscribe();
-
-  unsubscribe = null;
-  cloudReady = false;
 
   await signOut(auth);
 
 }
 
 
-window.loginWithGoogle = loginWithGoogle;
-window.logoutFirebase = logoutFirebase;
+window.logoutFirebase =
+  logoutFirebase;
 
 
-// 자산 패널 토글
+// ============================================================
+// 자산 패널
+// ============================================================
+
 function toggleAssetPanel(){
 
   const container =
-    document.getElementById("assetContainer");
+    document.getElementById(
+      "assetContainer"
+    );
 
   const btn =
-    document.getElementById("toggleAssetBtn");
+    document.getElementById(
+      "toggleAssetBtn"
+    );
 
 
-  if(container.style.display === "none"){
+  if(
+    container.style.display === "none"
+  ){
 
-    container.style.display = "block";
-    btn.textContent = "자산 접기";
+    container.style.display =
+      "block";
+
+    btn.textContent =
+      isAdmin()
+        ? "자산 관리 접기"
+        : "자산 조회 접기";
 
   }else{
 
-    container.style.display = "none";
-    btn.textContent = "자산 관리";
+    container.style.display =
+      "none";
+
+    btn.textContent =
+      isAdmin()
+        ? "자산 관리"
+        : "자산 조회";
 
   }
 
@@ -918,14 +1356,21 @@ window.toggleAssetPanel =
   toggleAssetPanel;
 
 
+// ============================================================
 // 자산 렌더링
+// ============================================================
+
 function renderAssets(){
 
   let total = 0;
+
   let out = "";
 
-  const isReadOnly =
-    !user ? "readonly" : "";
+
+  const readonly =
+    isAdmin()
+      ? ""
+      : "readonly";
 
 
   for(
@@ -933,51 +1378,89 @@ function renderAssets(){
     of Object.entries(assets)
   ){
 
-    total += Number(value)||0;
+    total +=
+      Number(value)||0;
+
 
     out += `
+
       <div class="asset-row">
 
-        <span>${name}</span>
+        <span>
+          ${name}
+        </span>
 
         <input
+
           type="number"
+
           min="0"
+
           step="10000"
+
           value="${Number(value)||0}"
-          ${isReadOnly}
-          onchange="updateAsset('${name}',this.value)"
+
+          ${readonly}
+
+          onchange="
+            updateAsset(
+              '${name}',
+              this.value
+            )
+          "
+
         >
 
       </div>
+
     `;
 
   }
 
 
-  document.getElementById("assets")
-    .innerHTML = out;
+  document.getElementById(
+    "assets"
+  ).innerHTML = out;
 
 
-  document.getElementById("assetTotal")
-    .textContent = won(total);
+  document.getElementById(
+    "assetTotal"
+  ).textContent =
+    won(total);
 
 
-  document.getElementById("assetSummary")
-    .textContent = won(total);
+  document.getElementById(
+    "assetSummary"
+  ).textContent =
+    won(total);
 
 
-  document.getElementById("loanAmount")
-    .value = loanAmount;
+  const loanInput =
+    document.getElementById(
+      "loanAmount"
+    );
 
 
-  document.getElementById("loanSummary")
-    .textContent = won(loanAmount);
+  loanInput.value =
+    loanAmount;
 
 
-  document.getElementById("assetLoanSummary")
-    .textContent =
-      won(total + loanAmount);
+  loanInput.readOnly =
+    !isAdmin();
+
+
+  document.getElementById(
+    "loanSummary"
+  ).textContent =
+    won(loanAmount);
+
+
+  document.getElementById(
+    "assetLoanSummary"
+  ).textContent =
+    won(
+      total + loanAmount
+    );
 
 
   return total;
@@ -985,90 +1468,147 @@ function renderAssets(){
 }
 
 
-// 전체 화면 렌더링
+// ============================================================
+// 전체 렌더링
+// ============================================================
+
 function render(){
 
   let cumulative = 0;
+
   let hit = null;
+
   let rows = "";
 
-  const isReadOnly =
-    !user ? "readonly" : "";
+
+  const readonly =
+    isAdmin()
+      ? ""
+      : "readonly";
 
 
-  // 월별 데이터
-  for(const d of months()){
+  // ----------------------------------------------------------
+  // 월별 기록
+  // ----------------------------------------------------------
 
-    const k = monthKey(d);
-    const actual = Number(data[k]||0);
-    const target = planned(k);
-    const diff = actual-target;
+  for(
+    const d of months()
+  ){
 
-    cumulative += actual;
+    const k =
+      monthKey(d);
+
+    const actual =
+      Number(data[k]||0);
+
+    const target =
+      planned(k);
+
+    const diff =
+      actual-target;
+
+
+    cumulative +=
+      actual;
+
 
     const remain =
-      Math.max(0,TARGET-cumulative);
+      Math.max(
+        0,
+        TARGET-cumulative
+      );
 
 
-    if(!hit && cumulative>=TARGET)
+    if(
+      !hit &&
+      cumulative >= TARGET
+    ){
+
       hit = k;
+
+    }
 
 
     rows += `
+
       <tr>
 
-        <td>${monthLabel(k)}</td>
-
-        <td>${won(MONTHLY)}</td>
+        <td>
+          ${monthLabel(k)}
+        </td>
 
         <td>
-          ${d.getMonth()===1
-            ? won(FEB_EXTRA)
-            : "-"
+          ${won(MONTHLY)}
+        </td>
+
+        <td>
+          ${
+            d.getMonth()===1
+              ? won(FEB_EXTRA)
+              : "-"
           }
         </td>
 
         <td>
-          <b>${won(target)}</b>
+          <b>
+            ${won(target)}
+          </b>
         </td>
 
         <td>
 
           <input
+
             type="number"
+
             min="0"
+
             step="10000"
+
             value="${actual||""}"
+
             placeholder=""
-            ${isReadOnly}
-            onchange="update('${k}',this.value)"
+
+            ${readonly}
+
+            onchange="
+              update(
+                '${k}',
+                this.value
+              )
+            "
+
           >
 
         </td>
 
-        <td class="${diff>=0?'plus':'minus'}">
+        <td
+          class="${diff>=0?'plus':'minus'}"
+        >
 
           ${
             actual
-            ? (
-              (diff>=0?"+":"")+
-              won(diff)
-            )
-            : "-"
+              ? (
+                  (diff>=0?"+":"")
+                  + won(diff)
+                )
+              : "-"
           }
 
         </td>
 
         <td>
-          <b>${won(cumulative)}</b>
+          <b>
+            ${won(cumulative)}
+          </b>
         </td>
 
         <td>
 
           ${
             remain
-            ? won(remain)
-            : '<span class="hit">목표 달성</span>'
+              ? won(remain)
+              : '<span class="hit">목표 달성</span>'
           }
 
         </td>
@@ -1077,67 +1617,85 @@ function render(){
 
           ${
             actual
-            ? (
-              Math.min(
-                100,
-                cumulative/TARGET*100
-              ).toFixed(1)+"%"
-            )
-            : "-"
+              ? (
+                  Math.min(
+                    100,
+                    cumulative/TARGET*100
+                  ).toFixed(1)
+                  + "%"
+                )
+              : "-"
           }
 
         </td>
 
       </tr>
+
     `;
 
   }
 
 
-  document.getElementById("rows")
-    .innerHTML = rows;
+  document.getElementById(
+    "rows"
+  ).innerHTML = rows;
 
 
-  // 저축 관련 카드
-  document.getElementById("saved")
-    .textContent = won(cumulative);
+  // ----------------------------------------------------------
+  // 저축 카드
+  // ----------------------------------------------------------
+
+  document.getElementById(
+    "saved"
+  ).textContent =
+    won(cumulative);
 
 
-  document.getElementById("remain")
-    .textContent =
-      won(
-        Math.max(
-          0,
-          TARGET-cumulative
-        )
-      );
+  const remainAmount =
+    Math.max(
+      0,
+      TARGET-cumulative
+    );
 
 
-  const rate =
+  document.getElementById(
+    "remain"
+  ).textContent =
+    won(remainAmount);
+
+
+  const savingRate =
     Math.min(
       100,
       cumulative/TARGET*100
     );
 
 
-  document.getElementById("rate")
-    .textContent =
-      rate.toFixed(1)+"%";
+  document.getElementById(
+    "rate"
+  ).textContent =
+    savingRate.toFixed(1)
+    + "%";
 
 
-  document.getElementById("bar")
-    .style.width =
-      rate+"%";
+  document.getElementById(
+    "bar"
+  ).style.width =
+    savingRate + "%";
 
 
-  document.getElementById("expected")
-    .textContent =
-      hit
+  document.getElementById(
+    "expected"
+  ).textContent =
+    hit
       ? monthLabel(hit)
       : estimate(cumulative);
 
 
+  // ----------------------------------------------------------
   // 이번 달
+  // ----------------------------------------------------------
+
   const now =
     monthKey(new Date());
 
@@ -1151,128 +1709,258 @@ function render(){
     actual-target;
 
 
-  document.getElementById("summary")
-    .innerHTML =
-      actual
+  document.getElementById(
+    "summary"
+  ).innerHTML =
 
-      ? `<b>${monthLabel(now)}</b>
-         실제 저축 ${won(actual)}
-         / 목표 ${won(target)}
-         · 목표 대비
-         <span class="${diff>=0?'plus':'minus'}">
-         ${diff>=0?"+":""}${won(diff)}
-         </span>`
+    actual
 
-      : `<b>${monthLabel(now)}</b>
-         실제 저축액을 입력해주세요.
-         이번 달 목표는
-         <b>${won(target)}</b>입니다.`;
+      ? `
+
+        <b>
+          ${monthLabel(now)}
+        </b>
+
+        실제 저축
+        ${won(actual)}
+
+        /
+        목표
+        ${won(target)}
+
+        · 목표 대비
+
+        <span
+          class="${diff>=0?'plus':'minus'}"
+        >
+          ${diff>=0?"+":""}${won(diff)}
+        </span>
+
+      `
+
+      : `
+
+        <b>
+          ${monthLabel(now)}
+        </b>
+
+        실제 저축액을 입력해주세요.
+
+        이번 달 목표는
+
+        <b>
+          ${won(target)}
+        </b>
+
+        입니다.
+
+      `;
 
 
-  // 현재 자산
+  // ----------------------------------------------------------
+  // 자산
+  // ----------------------------------------------------------
+
   const base =
     renderAssets();
 
 
-// 자산 + 저축
-const assetSavingTotal =
-  base + cumulative;
+  // ----------------------------------------------------------
+  // 합계
+  // ----------------------------------------------------------
 
-// 자산 + 대출 + 저축
-const assetLoanSavingTotal =
-  base + loanAmount + cumulative;
-
-// 자산 + 저축
-document.getElementById("assetSavingCard")
-  .textContent = won(assetSavingTotal);
-
-// 자산 + 대출 + 저축
-document.getElementById("totalAssetCard")
-  .textContent = won(assetLoanSavingTotal);
-
-// 13억 1천만원 목표 대비 달성률
-const totalAssetRate =
-  Math.min(
-    100,
-    assetLoanSavingTotal / TOTAL_ASSET_TARGET * 100
-  );
-
-// 프로그레스바
-document.getElementById("totalAssetBar")
-  .style.width = totalAssetRate + "%";
-
-// 달성률
-document.getElementById("totalAssetRate")
-  .textContent =
-    totalAssetRate.toFixed(1) + "%";
+  const assetSavingTotal =
+    base + cumulative;
 
 
-  // 로그인 상태에 따른 UI
+  const assetLoanSavingTotal =
+    base +
+    loanAmount +
+    cumulative;
+
+
+  // 자산 + 저축
+
+  document.getElementById(
+    "assetSavingCard"
+  ).textContent =
+    won(assetSavingTotal);
+
+
+  // 자산 + 대출 + 저축
+
+  document.getElementById(
+    "totalAssetCard"
+  ).textContent =
+    won(assetLoanSavingTotal);
+
+
+  // 13억 1천 목표 달성률
+
+  const totalAssetRate =
+    Math.min(
+      100,
+      assetLoanSavingTotal /
+      TOTAL_ASSET_TARGET *
+      100
+    );
+
+
+  document.getElementById(
+    "totalAssetBar"
+  ).style.width =
+    totalAssetRate + "%";
+
+
+  document.getElementById(
+    "totalAssetRate"
+  ).textContent =
+    totalAssetRate.toFixed(1)
+    + "%";
+
+
+  // ----------------------------------------------------------
+  // 관리자 / 조회자 UI
+  // ----------------------------------------------------------
+
   const toggleBtn =
-    document.getElementById("toggleAssetBtn");
+    document.getElementById(
+      "toggleAssetBtn"
+    );
 
   const addBtn =
-    document.getElementById("addMonthBtn");
+    document.getElementById(
+      "addMonthBtn"
+    );
 
   const resetBtn =
-    document.getElementById("resetBtn");
+    document.getElementById(
+      "resetBtn"
+    );
 
   const assetContainer =
-    document.getElementById("assetContainer");
+    document.getElementById(
+      "assetContainer"
+    );
+
+  const permissionBadge =
+    document.getElementById(
+      "permissionBadge"
+    );
+
+  const assetNotice =
+    document.getElementById(
+      "assetNotice"
+    );
 
 
-  if(user){
+  if(isAdmin()){
 
-    toggleBtn.disabled = false;
+    permissionBadge.className =
+      "admin-badge";
+
+    permissionBadge.textContent =
+      "관리자";
 
     toggleBtn.textContent =
       assetContainer.style.display === "none"
-      ? "자산 관리"
-      : "자산 접기";
+        ? "자산 관리"
+        : "자산 관리 접기";
 
-    addBtn.disabled = false;
-    resetBtn.disabled = false;
+
+    assetNotice.textContent =
+      "관리자 계정입니다. 현재 자산, 대출금액, 월별 저축액을 수정할 수 있습니다.";
+
+
+    addBtn.disabled =
+      false;
+
+    resetBtn.disabled =
+      false;
+
+
+    status(
+      "관리자 모드",
+      "synced"
+    );
+
 
   }else{
 
-    toggleBtn.disabled = true;
+    permissionBadge.className =
+      "readonly-badge";
+
+    permissionBadge.textContent =
+      "조회 전용";
+
 
     toggleBtn.textContent =
-      "자산 관리 (로그인 필요)";
+      assetContainer.style.display === "none"
+        ? "자산 조회"
+        : "자산 조회 접기";
 
-    addBtn.disabled = true;
-    resetBtn.disabled = true;
 
-    assetContainer.style.display =
-      "none";
+    assetNotice.textContent =
+      "조회 전용입니다. 현재 자산과 대출금액은 조회할 수 있지만 수정할 수 없습니다.";
+
+
+    addBtn.disabled =
+      true;
+
+    resetBtn.disabled =
+      true;
 
   }
 
 }
 
 
-// 예상 달성 시점
+// ============================================================
+// 예상 목표 달성
+// ============================================================
+
 function estimate(cumulative){
 
-  let total = cumulative;
+  let total =
+    cumulative;
 
-  let d = new Date();
+
+  let d =
+    new Date();
 
   d.setDate(1);
-  d.setMonth(d.getMonth()+1);
+
+  d.setMonth(
+    d.getMonth()+1
+  );
 
 
-  for(let i=0;i<120;i++){
+  for(
+    let i=0;
+    i<120;
+    i++
+  ){
 
     total +=
-      planned(monthKey(d));
+      planned(
+        monthKey(d)
+      );
 
-    if(total>=TARGET)
+
+    if(
+      total >= TARGET
+    ){
+
       return monthLabel(
         monthKey(d)
       );
 
-    d.setMonth(d.getMonth()+1);
+    }
+
+
+    d.setMonth(
+      d.getMonth()+1
+    );
 
   }
 
@@ -1282,32 +1970,47 @@ function estimate(cumulative){
 }
 
 
+// ============================================================
 // 월별 저축 업데이트
+// ============================================================
+
 function update(k,v){
 
-  if(!user) return;
+  if(!isAdmin())
+    return;
+
 
   data[k] =
     Number(v)||0;
 
+
   save();
+
   render();
 
 }
 
 
-window.update = update;
+window.update =
+  update;
 
 
+// ============================================================
 // 자산 업데이트
+// ============================================================
+
 function updateAsset(name,v){
 
-  if(!user) return;
+  if(!isAdmin())
+    return;
+
 
   assets[name] =
     Number(v)||0;
 
+
   save();
+
   render();
 
 }
@@ -1317,15 +2020,22 @@ window.updateAsset =
   updateAsset;
 
 
-// 대출금액 업데이트
+// ============================================================
+// 대출 업데이트
+// ============================================================
+
 function updateLoan(v){
 
-  if(!user) return;
+  if(!isAdmin())
+    return;
+
 
   loanAmount =
     Number(v)||0;
 
+
   save();
+
   render();
 
 }
@@ -1335,13 +2045,21 @@ window.updateLoan =
   updateLoan;
 
 
+// ============================================================
 // 이번 달 추가
+// ============================================================
+
 function addCurrentMonth(){
 
-  if(!user) return;
+  if(!isAdmin())
+    return;
+
 
   const k =
-    monthKey(new Date());
+    monthKey(
+      new Date()
+    );
+
 
   const el =
     document.querySelector(
@@ -1367,10 +2085,15 @@ window.addCurrentMonth =
   addCurrentMonth;
 
 
+// ============================================================
 // 초기화
+// ============================================================
+
 function resetData(){
 
-  if(!user) return;
+  if(!isAdmin())
+    return;
+
 
   if(
     confirm(
@@ -1381,6 +2104,7 @@ function resetData(){
     data = {};
 
     save();
+
     render();
 
   }
@@ -1392,17 +2116,25 @@ window.resetData =
   resetData;
 
 
+// ============================================================
 // CSV
+// ============================================================
+
 function exportCSV(){
 
   let lines = [
+
     "월,기본목표,2월추가,월목표,실제저축액,차이,누적저축,남은금액,달성률"
+
   ];
+
 
   let cumulative = 0;
 
 
-  for(const d of months()){
+  for(
+    const d of months()
+  ){
 
     const k =
       monthKey(d);
@@ -1413,56 +2145,78 @@ function exportCSV(){
     const target =
       planned(k);
 
-    cumulative += actual;
+
+    cumulative +=
+      actual;
 
 
     lines.push([
+
       k,
+
       MONTHLY,
+
       d.getMonth()===1
         ? FEB_EXTRA
         : 0,
+
       target,
+
       actual,
+
       actual-target,
+
       cumulative,
+
       Math.max(
         0,
         TARGET-cumulative
       ),
+
       (
         cumulative/TARGET*100
-      ).toFixed(1)+"%"
+      ).toFixed(1)
+      + "%"
+
     ].join(","));
 
   }
 
 
-  // 대출 및 자산 정보 추가
   const assetTotal =
     Object.values(assets)
       .reduce(
-        (sum,v)=>sum+(Number(v)||0),
+        (sum,v)=>
+          sum+(Number(v)||0),
         0
       );
 
 
   lines.push("");
+
   lines.push(
-    "현재자산,"+
+    "현재자산," +
     assetTotal
   );
 
   lines.push(
-    "대출금액,"+
+    "대출금액," +
     loanAmount
   );
 
   lines.push(
-    "현재자산+대출금액+누적저축,"+
+    "현재자산+누적저축," +
     (
-      assetTotal+
-      loanAmount+
+      assetTotal +
+      cumulative
+    )
+  );
+
+  lines.push(
+    "현재자산+대출금액+누적저축," +
+    (
+      assetTotal +
+      loanAmount +
       cumulative
     )
   );
@@ -1471,7 +2225,7 @@ function exportCSV(){
   const blob =
     new Blob(
       [
-        "\ufeff"+
+        "\ufeff" +
         lines.join("\n")
       ],
       {
@@ -1484,11 +2238,14 @@ function exportCSV(){
   const a =
     document.createElement("a");
 
+
   a.href =
     URL.createObjectURL(blob);
 
+
   a.download =
     "1억3천_저축기록.csv";
+
 
   a.click();
 
@@ -1499,7 +2256,10 @@ window.exportCSV =
   exportCSV;
 
 
+// ============================================================
 // Firebase 초기화
+// ============================================================
+
 if(
   !firebaseConfig.apiKey.startsWith("YOUR_")
 ){
@@ -1507,20 +2267,138 @@ if(
   try{
 
     const app =
-      initializeApp(firebaseConfig);
+      initializeApp(
+        firebaseConfig
+      );
+
 
     auth =
       getAuth(app);
+
 
     db =
       getFirestore(app);
 
 
+    // ========================================================
+    // 핵심
+    //
+    // 로그인 여부와 관계없이
+    // 모든 사용자가 같은 문서를 조회
+    // ========================================================
+
+    const sharedRef =
+      doc(
+        db,
+        "savingChallenge",
+        "main"
+      );
+
+
+    unsubscribe =
+      onSnapshot(
+
+        sharedRef,
+
+        snapshot => {
+
+          cloudReady = true;
+
+
+          if(
+            snapshot.exists()
+          ){
+
+            const v =
+              snapshot.data();
+
+
+            if(v.data)
+              data = v.data;
+
+
+            if(v.assets)
+              assets = v.assets;
+
+
+            if(
+              v.loanAmount !==
+              undefined
+            ){
+
+              loanAmount =
+                Number(
+                  v.loanAmount
+                ) || 0;
+
+            }
+
+
+            localSave();
+
+          }
+
+
+          render();
+
+
+          if(isAdmin()){
+
+            status(
+              "관리자 모드",
+              "synced"
+            );
+
+          }else{
+
+            status(
+              "실시간 조회 중",
+              "synced"
+            );
+
+          }
+
+        },
+
+        error => {
+
+          console.error(
+            "Firestore 조회 오류:",
+            error
+          );
+
+
+          cloudReady =
+            false;
+
+
+          status(
+            "Firestore 조회 실패",
+            "error"
+          );
+
+
+          // Firestore에 문제가 있어도
+          // 기존 로컬 데이터를 화면에 표시
+          render();
+
+        }
+
+      );
+
+
+    // ========================================================
+    // 로그인 상태
+    // ========================================================
+
     onAuthStateChanged(
+
       auth,
-      async u=>{
+
+      u => {
 
         user = u;
+
 
         document.getElementById(
           "loginBtn"
@@ -1534,37 +2412,42 @@ if(
           u ? "" : "none";
 
 
-        if(u){
+        console.log(
+          "현재 로그인 UID:",
+          u?.uid || "비로그인"
+        );
+
+
+        if(
+          isAdmin()
+        ){
 
           status(
-            "연결 중...",
-            "syncing"
+            "관리자 모드",
+            "synced"
           );
 
+        }else if(u){
 
-          try{
-
-            await loadCloud();
-
-          }catch(e){
-
-            console.error(e);
-
-            status(
-              "읽기 실패 (로컬 모드)"
-            );
-
-          }
+          status(
+            "조회 전용",
+            "synced"
+          );
 
         }else{
 
-          status("조회 모드");
-
-          render();
+          status(
+            "실시간 조회 중",
+            "synced"
+          );
 
         }
 
+
+        render();
+
       }
+
     );
 
 
@@ -1573,7 +2456,7 @@ if(
     console.error(e);
 
     status(
-      "초기화 실패",
+      "Firebase 초기화 실패",
       "error"
     );
 
@@ -1589,6 +2472,7 @@ if(
 }
 
 
+// 최초 렌더링
 render();
 
 </script>
