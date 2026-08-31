@@ -5,427 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>1억 3천 저축 챌린지</title>
 
-<style>
-*{box-sizing:border-box}
-
-body{
-  margin:0;
-  background:#f5f6f8;
-  color:#202124;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",sans-serif
-}
-
-.container{
-  max-width:1200px;
-  margin:0 auto;
-  padding:32px 20px 60px
-}
-
-.header{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  margin-bottom:24px;
-  gap:16px;
-  flex-wrap:wrap
-}
-
-.title h1{
-  margin:0 0 8px;
-  font-size:30px
-}
-
-.title p{
-  margin:0;
-  color:#6b7280
-}
-
-.auth-top{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  background:#fff;
-  padding:6px 12px;
-  border:1px solid #e5e7eb;
-  border-radius:10px;
-  font-size:12px;
-  color:#4b5563
-}
-
-.auth-top button{
-  padding:6px 10px;
-  font-size:12px
-}
-
-.cards{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:14px;
-  margin-bottom:18px
-}
-
-.card{
-  background:#fff;
-  border:1px solid #e5e7eb;
-  border-radius:14px;
-  padding:18px
-}
-
-.label{
-  font-size:13px;
-  color:#6b7280
-}
-
-.value{
-  font-size:25px;
-  font-weight:700;
-  margin-top:8px
-}
-
-.sub{
-  font-size:12px;
-  color:#9ca3af;
-  margin-top:5px
-}
-
-.progress{
-  height:10px;
-  background:#e5e7eb;
-  border-radius:99px;
-  overflow:hidden;
-  margin-top:10px
-}
-
-.bar{
-  height:100%;
-  background:#111827;
-  width:0;
-  transition:width .3s ease
-}
-
-.panel{
-  background:#fff;
-  border:1px solid #e5e7eb;
-  border-radius:14px;
-  padding:20px;
-  margin-top:18px
-}
-
-.panel h2{
-  font-size:18px;
-  margin:0 0 14px
-}
-
-.controls{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  align-items:center
-}
-
-button{
-  border:0;
-  border-radius:9px;
-  padding:10px 14px;
-  background:#111827;
-  color:white;
-  cursor:pointer;
-  font-weight:600
-}
-
-button.secondary{
-  background:#eef0f3;
-  color:#202124
-}
-
-button:disabled{
-  background:#e5e7eb;
-  color:#9ca3af;
-  cursor:not-allowed
-}
-
-.table-wrap{
-  overflow:auto
-}
-
-.table{
-  width:100%;
-  border-collapse:collapse;
-  min-width:850px
-}
-
-.table th,
-.table td{
-  padding:11px 10px;
-  border-bottom:1px solid #eee;
-  text-align:right;
-  font-size:13px
-}
-
-.table th{
-  color:#6b7280;
-  font-weight:600;
-  background:#fafafa
-}
-
-.table th:first-child,
-.table td:first-child{
-  text-align:left
-}
-
-.table input{
-  width:125px;
-  padding:8px;
-  border:1px solid #d1d5db;
-  border-radius:7px;
-  text-align:right
-}
-
-.plus{
-  color:#15803d;
-  font-weight:700
-}
-
-.minus{
-  color:#dc2626;
-  font-weight:700
-}
-
-.hit{
-  color:#15803d;
-  font-weight:700
-}
-
-.muted{
-  color:#9ca3af
-}
-
-.notice{
-  background:#f9fafb;
-  border:1px dashed #d1d5db;
-  padding:12px 14px;
-  border-radius:10px;
-  font-size:13px;
-  color:#4b5563;
-  margin-bottom:15px
-}
-
-.asset-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:12px;
-  margin-top:15px
-}
-
-.asset-row{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  padding:10px 0;
-  border-bottom:1px solid #eee
-}
-
-.asset-row:last-child{
-  border-bottom:0
-}
-
-.asset-row input{
-  width:140px;
-  padding:8px;
-  border:1px solid #d1d5db;
-  border-radius:7px;
-  text-align:right
-}
-
-.asset-total{
-  font-size:24px;
-  font-weight:700
-}
-
-.loan-box{
-  margin-top:18px;
-  padding-top:18px;
-  border-top:1px solid #eee
-}
-
-.loan-row{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:15px
-}
-
-.loan-row label{
-  font-size:14px;
-  color:#4b5563
-}
-
-.loan-row input{
-  width:180px;
-  padding:10px;
-  border:1px solid #d1d5db;
-  border-radius:8px;
-  text-align:right;
-  font-size:15px
-}
-
-.total-summary{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:12px;
-  margin-top:18px
-}
-
-.total-summary-item{
-  background:#f9fafb;
-  border-radius:10px;
-  padding:14px
-}
-
-.total-summary-item .summary-label{
-  font-size:12px;
-  color:#6b7280
-}
-
-.total-summary-item .summary-value{
-  margin-top:6px;
-  font-size:19px;
-  font-weight:700
-}
-
-.green{
-  color:#15803d
-}
-
-.red{
-  color:#dc2626
-}
-
-.firebase-status{
-  font-size:12px;
-  color:#6b7280
-}
-
-.firebase-status.synced{
-  color:#15803d
-}
-
-.firebase-status.syncing{
-  color:#b45309
-}
-
-.firebase-status.error{
-  color:#dc2626
-}
-
-.panel-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:14px
-}
-
-.panel-header h2{
-  margin:0
-}
-
-.admin-badge{
-  display:inline-block;
-  margin-left:6px;
-  padding:3px 7px;
-  border-radius:6px;
-  background:#ecfdf5;
-  color:#15803d;
-  font-size:11px;
-  font-weight:700
-}
-
-.readonly-badge{
-  display:inline-block;
-  margin-left:6px;
-  padding:3px 7px;
-  border-radius:6px;
-  background:#f3f4f6;
-  color:#6b7280;
-  font-size:11px;
-  font-weight:700
-}
-
-#authGate{
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-}
-.auth-card{
-  width:100%;
-  max-width:420px;
-  background:#fff;
-  border:1px solid #e5e7eb;
-  border-radius:14px;
-  padding:28px;
-  text-align:center;
-  box-shadow:0 8px 30px rgba(0,0,0,.06)
-}
-.auth-card h1{margin:0 0 10px;font-size:24px}
-.auth-card p{margin:0 0 20px;color:#6b7280;font-size:14px;line-height:1.6}
-.auth-error{margin-top:14px;color:#dc2626;font-size:13px;line-height:1.5}
-
-@media(max-width:900px){
-
-  .cards{
-    grid-template-columns:repeat(2,1fr)
-  }
-
-  .asset-grid{
-    grid-template-columns:1fr 1fr
-  }
-
-  .total-summary{
-    grid-template-columns:1fr 1fr
-  }
-
-}
-
-@media(max-width:800px){
-
-  .container{
-    padding:20px 12px
-  }
-
-  .value{
-    font-size:21px
-  }
-
-}
-
-@media(max-width:500px){
-
-  .cards{
-    grid-template-columns:1fr
-  }
-
-  .asset-grid{
-    grid-template-columns:1fr
-  }
-
-  .total-summary{
-    grid-template-columns:1fr
-  }
-
-  .loan-row{
-    flex-direction:column;
-    align-items:flex-start
-  }
-
-  .loan-row input{
-    width:100%
-  }
-
-}
-</style>
+<link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
@@ -435,11 +15,11 @@ button:disabled{
     <h1>🎯 1억 3천 저축 챌린지</h1>
     <p id="authMessage">Google 계정으로 로그인해주세요.</p>
     <button id="gateLoginBtn" onclick="loginWithGoogle()">Google 로그인</button>
-    <div id="authError" class="auth-error" style="display:none"></div>
+    <div id="authError" class="auth-error is-hidden"></div>
   </div>
 </div>
 
-<div id="app" class="container" style="display:none;">
+<div id="app" class="container is-hidden">
 
   <!-- 헤더 -->
   <div class="header">
@@ -475,7 +55,7 @@ button:disabled{
         id="logoutBtn"
         class="secondary"
         onclick="logoutFirebase()"
-        style="display:none"
+        class="is-hidden"
       >
         로그아웃
       </button>
@@ -520,7 +100,7 @@ button:disabled{
 
     <div
       id="assetContainer"
-      style="display:none;margin-top:15px;"
+      class="is-hidden asset-container"
     >
 
       <div
@@ -548,10 +128,10 @@ button:disabled{
 
           <input
             id="loanAmount"
-            type="number"
-            min="0"
-            step="10000"
+            type="text"
+            inputmode="numeric"
             value="0"
+            oninput="formatAmountInput(this)"
             onchange="updateLoan(this.value)"
           >
 
@@ -634,12 +214,7 @@ button:disabled{
           0원
         </span>
 
-        <span
-          style="
-            font-size:18px;
-            color:#9ca3af;
-            font-weight:500;
-          "
+        <span class="target-total"
         >
           / 1억 3,000만원
         </span>
@@ -663,25 +238,13 @@ button:disabled{
       </div>
 
 
-      <div
-        style="
-          margin-top:12px;
-          padding-top:12px;
-          border-top:1px solid #eee;
-          font-size:13px;
-          color:#6b7280;
-        "
+      <div class="card-detail"
       >
 
         목표까지 남은 금액
 
         <strong
-          id="remain"
-          style="
-            float:right;
-            color:#202124;
-            font-size:14px;
-          "
+          id="remain" class="detail-value"
         >
           1억 3,000만원
         </strong>
@@ -704,12 +267,7 @@ button:disabled{
           0원
         </span>
 
-        <span
-          style="
-            font-size:18px;
-            color:#9ca3af;
-            font-weight:500;
-          "
+        <span class="target-total"
         >
           / 13억 1,000만원
         </span>
@@ -733,24 +291,12 @@ button:disabled{
       </div>
 
 
-      <div
-        style="
-          margin-top:12px;
-          padding-top:12px;
-          border-top:1px solid #eee;
-          font-size:13px;
-          color:#6b7280;
-        "
+      <div class="card-detail"
       >
 
         목표금액
 
-        <strong
-          style="
-            float:right;
-            color:#202124;
-            font-size:14px;
-          "
+        <strong class="detail-value"
         >
           13억 1,000만원
         </strong>
@@ -1424,15 +970,15 @@ function renderAssets(){
 
         <input
 
-          type="number"
+          type="text"
 
-          min="0"
+          inputmode="numeric"
 
-          step="10000"
-
-          value="${Number(value)||0}"
+          value="${(Number(value)||0).toLocaleString('en-US')}"
 
           ${readonly}
+
+          oninput="formatAmountInput(this)"
 
           onchange="
             updateAsset(
@@ -1474,7 +1020,7 @@ function renderAssets(){
 
 
   loanInput.value =
-    loanAmount;
+    loanAmount.toLocaleString("en-US");
 
 
   loanInput.readOnly =
@@ -1837,6 +1383,12 @@ function render(){
       100
     );
 
+  const totalAssetRemainAmount =
+    Math.max(
+      0,
+      TOTAL_ASSET_TARGET - assetLoanSavingTotal
+    );
+
 
   document.getElementById(
     "totalAssetBar"
@@ -1848,7 +1400,9 @@ function render(){
     "totalAssetRate"
   ).textContent =
     totalAssetRate.toFixed(1)
-    + "%";
+    + "% (남은 금액: "
+    + won(totalAssetRemainAmount)
+    + ")";
 
 
   // ----------------------------------------------------------
@@ -1972,7 +1526,7 @@ function updateAsset(name,v){
 
 
   assets[name] =
-    Number(v)||0;
+    parseAmount(v);
 
 
   save();
@@ -1986,6 +1540,32 @@ window.updateAsset =
   updateAsset;
 
 
+function parseAmount(value){
+
+  return Number(
+    String(value).replace(/,/g, "")
+  ) || 0;
+
+}
+
+
+function formatAmountInput(input){
+
+  const digits =
+    input.value.replace(/[^0-9]/g, "");
+
+  input.value =
+    digits
+      ? Number(digits).toLocaleString("en-US")
+      : "";
+
+}
+
+
+window.formatAmountInput =
+  formatAmountInput;
+
+
 // ============================================================
 // 대출 업데이트
 // ============================================================
@@ -1997,7 +1577,7 @@ function updateLoan(v){
 
 
   loanAmount =
-    Number(v)||0;
+    parseAmount(v);
 
 
   save();
