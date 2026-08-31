@@ -446,7 +446,9 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   signOut,
-  onAuthStateChanged
+  onAuthStateChanged,
+  setPersistence,
+  browserLocalPersistence
 }
 from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
@@ -1820,6 +1822,13 @@ if(
 
     auth =
       getAuth(app);
+
+    // 같은 브라우저/디바이스에서 다시 접속해도 로그인 상태 유지
+    // (로그아웃하거나 브라우저 사이트 데이터를 삭제하면 해제됨)
+    await setPersistence(
+      auth,
+      browserLocalPersistence
+    );
 
 
     db =
